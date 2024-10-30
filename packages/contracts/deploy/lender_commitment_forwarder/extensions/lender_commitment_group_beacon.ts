@@ -24,6 +24,11 @@ const deployFn: DeployFunction = async (hre) => {
 
   const tellerV2Address = await tellerV2.getAddress()
 
+
+  const uniswapPricingLibrary = await hre.contracts.get('UniswapPricingLibrary')
+
+ 
+
   const smartCommitmentForwarderAddress =
     await SmartCommitmentForwarder.getAddress()
 
@@ -60,6 +65,9 @@ const deployFn: DeployFunction = async (hre) => {
         smartCommitmentForwarderAddress,
         uniswapV3FactoryAddress,
       ],
+      libraries: {
+        UniswapPricingLibrary: await uniswapPricingLibrary.getAddress(),
+      },
       
     }
   )
