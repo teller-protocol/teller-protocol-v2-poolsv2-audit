@@ -525,7 +525,7 @@ contract TellerV2 is
         if (amountToProtocol > 0) {
             bid.loanDetails.lendingToken.safeTransferFrom(
                 sender,
-                owner(),
+                _getProtocolFeeRecipient(),
                 amountToProtocol
             );
         }
@@ -1270,6 +1270,36 @@ contract TellerV2 is
        
 
         return bidDefaultDuration[_bidId];
+    }
+
+
+
+    function _getProtocolFeeRecipient()
+    internal view
+    returns (address) {
+
+        if (protocolFeeRecipient == address(0x0)){
+            return owner() ;
+        }else {
+            return protocolFeeRecipient; 
+        }
+
+    }
+
+    function getProtocolFeeRecipient()
+    external view
+    returns (address) {
+
+       return _getProtocolFeeRecipient();
+
+    }
+
+    function setProtocolFeeRecipient(address _recipient)
+    external onlyOwner
+      {
+
+      protocolFeeRecipient = _recipient;
+
     }
 
     // -----

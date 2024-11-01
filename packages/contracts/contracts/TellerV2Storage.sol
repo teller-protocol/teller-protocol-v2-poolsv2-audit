@@ -167,4 +167,8 @@ abstract contract TellerV2Storage_G7 is TellerV2Storage_G6 {
     bool private __liquidationsPaused; //liquidations paused
 }
 
-abstract contract TellerV2Storage is TellerV2Storage_G7 {}
+abstract contract TellerV2Storage_G8 is TellerV2Storage_G7 {
+    address  protocolFeeRecipient;  
+}
+
+abstract contract TellerV2Storage is TellerV2Storage_G8 {}

@@ -171,6 +171,7 @@ interface ITellerV2 {
 
 
     function getEscrowVault() external view returns(address);
+    function getProtocolFeeRecipient () external view returns(address);
 
 
    // function isPauser(address _account) external view returns(bool);
