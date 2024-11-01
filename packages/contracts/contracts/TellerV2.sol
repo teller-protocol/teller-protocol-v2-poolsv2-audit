@@ -423,7 +423,7 @@ contract TellerV2 is
         ) {
             revert ActionNotAllowed({
                 bidId: _bidId,
-                action: "cancelBid",
+                action: "CB",
                 message: "Not bid owner"  //this is a TON of storage space
             });
         }
@@ -441,7 +441,7 @@ contract TellerV2 is
         ) {
             revert ActionNotAllowed({
                 bidId: _bidId,
-                action: "marketOwnerCancelBid",
+                action: "MOCB",
                 message: "Not market owner" //this is a TON of storage space 
             });
         }
@@ -456,7 +456,7 @@ contract TellerV2 is
     function _cancelBid(uint256 _bidId)
         internal
         virtual
-        pendingBid(_bidId, "cancelBid")
+        pendingBid(_bidId, "cb")
     {
         // Set the bid state to CANCELLED
         bids[_bidId].state = BidState.CANCELLED;
@@ -472,7 +472,7 @@ contract TellerV2 is
     function lenderAcceptBid(uint256 _bidId)
         external
         override
-        pendingBid(_bidId, "lenderAcceptBid")
+        pendingBid(_bidId, "lab")
         whenProtocolNotPaused
         returns (
             uint256 amountToProtocol,
@@ -568,7 +568,7 @@ contract TellerV2 is
 
     function claimLoanNFT(uint256 _bidId)
         external
-        acceptedLoan(_bidId, "claimLoanNFT")
+        acceptedLoan(_bidId, "cln")
         whenProtocolNotPaused
     {
         // Retrieve bid
@@ -590,7 +590,7 @@ contract TellerV2 is
      */
     function repayLoanMinimum(uint256 _bidId)
         external
-        acceptedLoan(_bidId, "repayLoan")
+        acceptedLoan(_bidId, "rl")
     {
         (
             uint256 owedPrincipal,
@@ -616,7 +616,7 @@ contract TellerV2 is
      */
     function repayLoanFull(uint256 _bidId)
         external
-        acceptedLoan(_bidId, "repayLoan")
+        acceptedLoan(_bidId, "rl")
     {
         _repayLoanFull(_bidId, true);
     }
@@ -629,7 +629,7 @@ contract TellerV2 is
      */
     function repayLoan(uint256 _bidId, uint256 _amount)
         external
-        acceptedLoan(_bidId, "repayLoan")
+        acceptedLoan(_bidId, "rl")
     {
         _repayLoanAtleastMinimum(_bidId, _amount, true);
     }
@@ -640,14 +640,14 @@ contract TellerV2 is
      */
     function repayLoanFullWithoutCollateralWithdraw(uint256 _bidId)
         external
-        acceptedLoan(_bidId, "repayLoan")
+        acceptedLoan(_bidId, "rl")
     {
         _repayLoanFull(_bidId, false);
     }
 
     function repayLoanWithoutCollateralWithdraw(uint256 _bidId, uint256 _amount)
         external
-        acceptedLoan(_bidId, "repayLoan")
+        acceptedLoan(_bidId, "rl")
     {
         _repayLoanAtleastMinimum(_bidId, _amount, false);
     }
@@ -703,7 +703,7 @@ contract TellerV2 is
 
     function lenderCloseLoan(uint256 _bidId)
         external whenProtocolNotPaused whenLiquidationsNotPaused
-        acceptedLoan(_bidId, "lenderClaimCollateral")
+        acceptedLoan(_bidId, "lcc")
     {
         Bid storage bid = bids[_bidId];
         address _collateralRecipient = getLoanLender(_bidId);
@@ -725,7 +725,7 @@ contract TellerV2 is
     function _lenderCloseLoanWithRecipient(
         uint256 _bidId,
         address _collateralRecipient
-    ) internal acceptedLoan(_bidId, "lenderClaimCollateral") {
+    ) internal acceptedLoan(_bidId, "lcc") {
         require(isLoanDefaulted(_bidId), "ND");
 
         Bid storage bid = bids[_bidId];
@@ -746,7 +746,7 @@ contract TellerV2 is
      */
     function liquidateLoanFull(uint256 _bidId)
         external whenProtocolNotPaused whenLiquidationsNotPaused
-        acceptedLoan(_bidId, "liquidateLoan")
+        acceptedLoan(_bidId, "ll")
     {
         Bid storage bid = bids[_bidId];
 
@@ -758,7 +758,7 @@ contract TellerV2 is
 
     function liquidateLoanFullWithRecipient(uint256 _bidId, address _recipient)
         external whenProtocolNotPaused whenLiquidationsNotPaused
-        acceptedLoan(_bidId, "liquidateLoan")
+        acceptedLoan(_bidId, "ll")
     {
         _liquidateLoanFull(_bidId, _recipient);
     }
@@ -769,7 +769,7 @@ contract TellerV2 is
      */
     function _liquidateLoanFull(uint256 _bidId, address _recipient)
         internal
-        acceptedLoan(_bidId, "liquidateLoan")
+        acceptedLoan(_bidId, "ll")
     {
         require(isLoanLiquidateable(_bidId), "NL");
 
