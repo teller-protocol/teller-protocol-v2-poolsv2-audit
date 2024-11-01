@@ -19,6 +19,8 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 
 
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
+
 import { CommitmentCollateralType, ISmartCommitment } from "../interfaces/ISmartCommitment.sol";
 
  
@@ -26,6 +28,7 @@ contract SmartCommitmentForwarder is
     ExtensionsContextUpgradeable, //this should always be first for upgradeability
     TellerV2MarketForwarder_G3,
     PausableUpgradeable,  //this does add some storage but AFTER all other storage
+     ReentrancyGuardUpgradeable,  //adds many storage slots so breaks upgradeability 
     ISmartCommitmentForwarder,
     IPausableTimestamp
      {
@@ -102,7 +105,7 @@ contract SmartCommitmentForwarder is
         address _recipient,
         uint16 _interestRate,
         uint32 _loanDuration
-    ) public whenNotPaused returns (uint256 bidId) {
+    ) public whenNotPaused nonReentrant returns (uint256 bidId) {
         require(
             ISmartCommitment(_smartCommitmentAddress)
                 .getCollateralTokenType() <=

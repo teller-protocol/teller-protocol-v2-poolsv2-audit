@@ -56,6 +56,7 @@ import {UniswapPricingLibrary} from "../../../libraries/UniswapPricingLibrary.so
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 /*
@@ -82,7 +83,8 @@ contract LenderCommitmentGroup_Smart is
     IPausableTimestamp,
     Initializable,
     OwnableUpgradeable,
-    PausableUpgradeable
+    PausableUpgradeable,
+    ReentrancyGuardUpgradeable  //adds many storage slots so breaks upgradeability 
 {
     using AddressUpgradeable for address;
     using NumbersLib for uint256;
@@ -458,7 +460,7 @@ contract LenderCommitmentGroup_Smart is
         uint256 _amount,
         address _sharesRecipient,
         uint256 _minSharesAmountOut
-    ) external whenForwarderNotPaused whenNotPaused returns (uint256 sharesAmount_) {
+    ) external whenForwarderNotPaused whenNotPaused nonReentrant returns (uint256 sharesAmount_) {
         //transfers the primary principal token from msg.sender into this contract escrow
 
        
@@ -594,7 +596,7 @@ contract LenderCommitmentGroup_Smart is
 
     function prepareSharesForWithdraw(
         uint256 _amountPoolSharesTokens 
-    ) external whenForwarderNotPaused whenNotPaused returns (bool) {
+    ) external whenForwarderNotPaused whenNotPaused nonReentrant returns (bool) {
         
         return _prepareSharesForWithdraw(msg.sender, _amountPoolSharesTokens); 
     }
@@ -629,7 +631,7 @@ contract LenderCommitmentGroup_Smart is
         uint256 _amountPoolSharesTokens,
         address _recipient,
         uint256 _minAmountOut
-    ) external whenForwarderNotPaused whenNotPaused returns (uint256) {
+    ) external whenForwarderNotPaused whenNotPaused  nonReentrant returns (uint256) {
        
         require(poolSharesPreparedToWithdrawForLender[msg.sender] >= _amountPoolSharesTokens,"Shares not prepared for withdraw");
         require(poolSharesPreparedTimestamp[msg.sender] <= block.timestamp - withdrawlDelayTimeSeconds,"Shares not prepared for withdraw");
@@ -672,7 +674,7 @@ contract LenderCommitmentGroup_Smart is
     function liquidateDefaultedLoanWithIncentive(
         uint256 _bidId,
         int256 _tokenAmountDifference
-    ) public whenForwarderNotPaused whenNotPaused bidIsActiveForGroup(_bidId) {
+    ) external whenForwarderNotPaused whenNotPaused bidIsActiveForGroup(_bidId) nonReentrant {
         
         //use original principal amount as amountDue
 

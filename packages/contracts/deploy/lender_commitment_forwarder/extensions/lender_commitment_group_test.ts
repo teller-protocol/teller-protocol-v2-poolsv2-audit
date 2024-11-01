@@ -93,7 +93,9 @@ deployFn.dependencies = [
   'smart-commitment-forwarder:deploy',
 ]
 
+
+//this is deprecated ....  use factory
 deployFn.skip = async (hre) => {
-  return !hre.network.live || !['sepolia', 'polygon'].includes(hre.network.name)
+  return !hre.network.live || !['sepolia'].includes(hre.network.name)
 }
 export default deployFn
