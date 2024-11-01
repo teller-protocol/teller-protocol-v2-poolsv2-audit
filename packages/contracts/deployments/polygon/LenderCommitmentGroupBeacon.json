@@ -1,5 +1,5 @@
 {
-  "address": "0x32d663a52747a8A38902DAa818289171b98bf80a",
+  "address": "0x68Dc57D998c2Eb974476E36aC7DFA88Dd4bA91a5",
   "abi": [
     {
       "type": "constructor",
@@ -354,6 +354,20 @@
       "outputs": [
         {
           "type": "uint256",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "ORACLE_MANAGER",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
           "name": ""
         }
       ]
@@ -1399,6 +1413,6 @@
     }
   ],
   "receipt": {},
-  "numDeployments": 10,
-  "implementation": "0x98c1A3E3C0eDfef8db0f1525B07F92d4DFD4ac71"
+  "numDeployments": 1,
+  "implementation": "0x8Fe43B3b6d176aC892b787635c2F29dDa292B024"
 }

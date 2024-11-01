@@ -1,5 +1,5 @@
 {
-  "address": "0xb0809780Baa3157345AeEb529aE88C81C51b9226",
+  "address": "0x1c644A1bCB658b718e76051cDE6A22cdb235a4fD",
   "abi": [
     {
       "type": "constructor",
@@ -100,6 +100,40 @@
           "type": "uint8",
           "name": "version",
           "indexed": false
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "OracleAddressChanged",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "previousOracle",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "newOracle",
+          "indexed": true
+        }
+      ]
+    },
+    {
+      "type": "event",
+      "anonymous": false,
+      "name": "OwnershipTransferred",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "previousOwner",
+          "indexed": true
+        },
+        {
+          "type": "address",
+          "name": "newOwner",
+          "indexed": true
         }
       ]
     },
@@ -313,11 +347,61 @@
     },
     {
       "type": "function",
+      "name": "hypernativeOracleIsStrictMode",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
       "name": "initialize",
       "constant": false,
       "payable": false,
       "inputs": [],
       "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "isOracleApproved",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_msgSender"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "isOracleApprovedAllowEOA",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_msgSender"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": ""
+        }
+      ]
     },
     {
       "type": "function",
@@ -329,6 +413,33 @@
       "outputs": [
         {
           "type": "uint256",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "oracleRegister",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_account"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "owner",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "address",
           "name": ""
         }
       ]
@@ -357,6 +468,14 @@
     },
     {
       "type": "function",
+      "name": "renounceOwnership",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
       "name": "revokeExtension",
       "constant": false,
       "payable": false,
@@ -364,6 +483,19 @@
         {
           "type": "address",
           "name": "extension"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "setIsStrictMode",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "bool",
+          "name": "_mode"
         }
       ],
       "outputs": []
@@ -383,6 +515,32 @@
     },
     {
       "type": "function",
+      "name": "setOracle",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_oracle"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
+      "name": "transferOwnership",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "newOwner"
+        }
+      ],
+      "outputs": []
+    },
+    {
+      "type": "function",
       "name": "unpause",
       "constant": false,
       "payable": false,
@@ -390,13 +548,13 @@
       "outputs": []
     }
   ],
-  "transactionHash": "0x245985c457dbb80bc45f42f5b67713f8a2da7f98d509de5580f636566a560a34",
+  "transactionHash": "0xc4e0c9b0f53137442d19100ee41dc63271d89bac0417da8e5f919b6a9374988e",
   "receipt": {
     "to": null,
     "from": "0xD9B023522CeCe02251d877bb0EB4f06fDe6F98E6",
     "blockHash": null,
     "blockNumber": null
   },
-  "numDeployments": 5,
-  "implementation": "0xF579ba9Ce33E392134Fd4a1A9D7D9d792eAF0B2b"
+  "numDeployments": 1,
+  "implementation": "0xb4D81863b0bDef8FF372d44c161a1a025d788A7a"
 }

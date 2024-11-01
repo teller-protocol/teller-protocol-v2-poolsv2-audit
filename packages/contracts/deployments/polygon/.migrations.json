@@ -36,5 +36,7 @@
   "teller-v2:pausing-manager-upgrade": 1729002281,
   "teller-v2:pausing-manager-upgrade-v2": 1729011159,
   "lender-commitment-group-beacon:upgrade": 1729179210,
-  "smart-commitment-forwarder:deploy": 1730300987
+  "smart-commitment-forwarder:deploy": 1730397720,
+  "lender-commitment-group-beacon:deploy": 1730397800,
+  "lender-commitment-group-factory:deploy": 1730397817
 }

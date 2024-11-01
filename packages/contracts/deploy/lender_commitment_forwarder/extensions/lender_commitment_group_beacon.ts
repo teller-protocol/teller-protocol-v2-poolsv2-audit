@@ -59,13 +59,14 @@ const deployFn: DeployFunction = async (hre) => {
     'LenderCommitmentGroup_Smart',
     {
       customName: 'LenderCommitmentGroupBeacon',
-      unsafeAllow: ['constructor', 'state-variable-immutable'],
+      unsafeAllow: ['constructor', 'state-variable-immutable','external-library-linking'],
       constructorArgs: [
         tellerV2Address,
         smartCommitmentForwarderAddress,
         uniswapV3FactoryAddress,
       ],
       libraries: {
+        //make this have only internal calls ? 
         UniswapPricingLibrary: await uniswapPricingLibrary.getAddress(),
       },
       

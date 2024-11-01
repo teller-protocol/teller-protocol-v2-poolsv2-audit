@@ -13,6 +13,8 @@ import "../interfaces/IHasProtocolPausingManager.sol";
 
 import "../interfaces/IProtocolPausingManager.sol";
 
+import "../oracleprotection/OracleProtectionManager.sol";
+
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
@@ -28,7 +30,8 @@ contract SmartCommitmentForwarder is
     ExtensionsContextUpgradeable, //this should always be first for upgradeability
     TellerV2MarketForwarder_G3,
     PausableUpgradeable,  //this does add some storage but AFTER all other storage
-     ReentrancyGuardUpgradeable,  //adds many storage slots so breaks upgradeability 
+    ReentrancyGuardUpgradeable,  //adds many storage slots so breaks upgradeability 
+    OracleProtectionManager,  //uses deterministic  storage slots 
     ISmartCommitmentForwarder,
     IPausableTimestamp
      {

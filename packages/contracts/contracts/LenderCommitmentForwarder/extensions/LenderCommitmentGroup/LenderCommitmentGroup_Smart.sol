@@ -36,6 +36,9 @@ import "../../../libraries/uniswap/FullMath.sol";
 
 import {LenderCommitmentGroupShares} from "./LenderCommitmentGroupShares.sol";
 
+
+import {OracleProtectedChild} from "../../../oracleprotection/OracleProtectedChild.sol";
+
 import { MathUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
 
@@ -82,6 +85,7 @@ contract LenderCommitmentGroup_Smart is
     ILoanRepaymentListener,
     IPausableTimestamp,
     Initializable,
+    OracleProtectedChild,
     OwnableUpgradeable,
     PausableUpgradeable,
     ReentrancyGuardUpgradeable  //adds many storage slots so breaks upgradeability 
@@ -277,11 +281,10 @@ contract LenderCommitmentGroup_Smart is
         address _tellerV2,
         address _smartCommitmentForwarder,
         address _uniswapV3Factory
-    ) {
+    ) OracleProtectedChild(_smartCommitmentForwarder) {
         TELLER_V2 = _tellerV2;
         SMART_COMMITMENT_FORWARDER = _smartCommitmentForwarder;
         UNISWAP_V3_FACTORY = _uniswapV3Factory;
-     
     }
 
     /*
@@ -460,7 +463,7 @@ contract LenderCommitmentGroup_Smart is
         uint256 _amount,
         address _sharesRecipient,
         uint256 _minSharesAmountOut
-    ) external whenForwarderNotPaused whenNotPaused nonReentrant returns (uint256 sharesAmount_) {
+    ) external whenForwarderNotPaused whenNotPaused nonReentrant onlyOracleApprovedAllowEOA returns (uint256 sharesAmount_) {
         //transfers the primary principal token from msg.sender into this contract escrow
 
        
@@ -631,7 +634,7 @@ contract LenderCommitmentGroup_Smart is
         uint256 _amountPoolSharesTokens,
         address _recipient,
         uint256 _minAmountOut
-    ) external whenForwarderNotPaused whenNotPaused  nonReentrant returns (uint256) {
+    ) external whenForwarderNotPaused whenNotPaused  nonReentrant onlyOracleApprovedAllowEOA returns (uint256) {
        
         require(poolSharesPreparedToWithdrawForLender[msg.sender] >= _amountPoolSharesTokens,"Shares not prepared for withdraw");
         require(poolSharesPreparedTimestamp[msg.sender] <= block.timestamp - withdrawlDelayTimeSeconds,"Shares not prepared for withdraw");
@@ -674,7 +677,7 @@ contract LenderCommitmentGroup_Smart is
     function liquidateDefaultedLoanWithIncentive(
         uint256 _bidId,
         int256 _tokenAmountDifference
-    ) external whenForwarderNotPaused whenNotPaused bidIsActiveForGroup(_bidId) nonReentrant {
+    ) external whenForwarderNotPaused whenNotPaused bidIsActiveForGroup(_bidId) nonReentrant onlyOracleApprovedAllowEOA {
         
         //use original principal amount as amountDue
 
