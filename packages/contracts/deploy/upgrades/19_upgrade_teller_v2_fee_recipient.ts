@@ -47,64 +47,17 @@ const deployFn: DeployFunction = async (hre) => {
             'external-library-linking',
           ],
           constructorArgs: [await trustedForwarder.getAddress()],
-          call: {
-            fn: 'setProtocolPausingManager',
-            args: [await protocolPausingManager.getAddress()],
-          },
+          
        
        
         },
       },
 
-      {
-        proxy: collateralManager,
-        implFactory: await hre.ethers.getContractFactory('CollateralManager'),
-      },
+   
 
 
-      {
-        proxy: smartCommitmentForwarder,
-        implFactory: await hre.ethers.getContractFactory(
-          'SmartCommitmentForwarder'
-        ),
-
-        opts: {
-          unsafeAllow: ['constructor', 'state-variable-immutable'],
-          unsafeAllowRenames: true,
-          // unsafeSkipStorageCheck: true, //caution !
-          constructorArgs: [
-            await tellerV2.getAddress(),
-            await marketRegistry.getAddress(),
-          ],
-        },
-      },
-
-
-      //also need the latest code for lender pools ! 
-      /*
-      {
-        beacon: lenderCommitmentGroupBeaconProxy,
-        implFactory: await hre.ethers.getContractFactory('LenderCommitmentGroup_Smart', {
-          libraries: {
-            UniswapPricingLibrary: uniswapPricingLibrary.address,
-          },
-        }),
-
-        opts: {
-          unsafeSkipStorageCheck: true, 
-          unsafeAllow: [
-            'constructor',
-            'state-variable-immutable',
-            'external-library-linking',
-          ],
-          constructorArgs: [
-            tellerV2Address,
-            smartCommitmentForwarderAddress,
-            uniswapV3FactoryAddress,
-
-          ],
-        },
-      },*/
+      
+ 
        
     ],
   })
