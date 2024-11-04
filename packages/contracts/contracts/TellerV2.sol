@@ -1279,7 +1279,7 @@ contract TellerV2 is
     returns (address) {
 
         if (protocolFeeRecipient == address(0x0)){
-            return owner() ;
+            return owner();
         }else {
             return protocolFeeRecipient; 
         }

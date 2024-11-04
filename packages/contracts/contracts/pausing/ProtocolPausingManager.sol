@@ -40,7 +40,7 @@ contract ProtocolPausingManager is ContextUpgradeable, OwnableUpgradeable, IProt
 
     // u8 private _currentPauseState;  //use an enum !!! 
 
-    mapping(address => bool) public  pauserRoleBearer  ;
+    mapping(address => bool) public  pauserRoleBearer;
 
 
     uint256 private lastPausedAt;
@@ -168,7 +168,7 @@ contract ProtocolPausingManager is ContextUpgradeable, OwnableUpgradeable, IProt
 
 
     function isPauser(address _account) public view returns(bool){
-        return pauserRoleBearer[_account] || _account == owner() ;
+        return pauserRoleBearer[_account] || _account == owner();
     }
 
   

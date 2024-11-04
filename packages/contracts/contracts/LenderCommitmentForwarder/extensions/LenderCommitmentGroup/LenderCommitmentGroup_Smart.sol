@@ -154,7 +154,7 @@ contract LenderCommitmentGroup_Smart is
     bool public firstDepositMade;
     uint256 public withdrawlDelayTimeSeconds; 
 
-    IUniswapPricingLibrary.PoolRouteConfig[]  public  poolOracleRoutes ;
+    IUniswapPricingLibrary.PoolRouteConfig[]  public  poolOracleRoutes;
 
     //configured by the owner. If 0 , not used. 
     uint256 public maxPrincipalPerCollateralAmount; 
@@ -525,7 +525,7 @@ contract LenderCommitmentGroup_Smart is
             return 0;
         }
 
-        value_ = MathUpgradeable.mulDiv(amount ,  EXCHANGE_RATE_EXPANSION_FACTOR   ,  rate ) ;
+        value_ = MathUpgradeable.mulDiv(amount ,  EXCHANGE_RATE_EXPANSION_FACTOR   ,  rate );
     }
 
     function acceptFundsForAcceptBid(
@@ -883,7 +883,7 @@ contract LenderCommitmentGroup_Smart is
                 : Math.min(
                     pairPriceWithTwapFromOracle,
                     maxPrincipalPerCollateralAmount //this is expanded by uniswap exp factor  
-                ) ;
+                );
 
 
         return
@@ -1035,7 +1035,7 @@ contract LenderCommitmentGroup_Smart is
     {     
 
             return  ( uint256( getPoolTotalEstimatedValue() )).percent(liquidityThresholdPercent) -
-            getTotalPrincipalTokensOutstandingInActiveLoans() ;
+            getTotalPrincipalTokensOutstandingInActiveLoans();
      
     }
 
