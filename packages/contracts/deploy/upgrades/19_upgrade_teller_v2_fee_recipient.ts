@@ -23,11 +23,11 @@ const deployFn: DeployFunction = async (hre) => {
 
 
   await hre.upgrades.proposeBatchTimelock({
-    title: 'TellerV2: Add Proto Fee Recipient',
+    title: 'TellerV2: Add Proto Fee Recipient V2',
     description: ` 
 # TellerV2
 
-* Adds proto fee recipient get/set.
+* Adds proto fee recipient get/set. V2
  
 `,
     _steps: [
@@ -51,14 +51,9 @@ const deployFn: DeployFunction = async (hre) => {
        
        
         },
-      },
+      }
 
-   
-
-
-      
- 
-       
+    
     ],
   })
 
