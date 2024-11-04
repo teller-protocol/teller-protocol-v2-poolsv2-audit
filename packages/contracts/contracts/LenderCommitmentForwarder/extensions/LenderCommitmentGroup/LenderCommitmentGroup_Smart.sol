@@ -725,11 +725,11 @@ contract LenderCommitmentGroup_Smart is
                 amountDue + tokensToTakeFromSender - liquidationProtocolFee
             ); 
              
-            address protocolOwner = Ownable(address(TELLER_V2)).owner();
+            address protocolFeeRecipient = ITellerV2(address(TELLER_V2)).getProtocolFeeRecipient();
 
               IERC20(principalToken).safeTransferFrom(
                 msg.sender,
-                address(protocolOwner),
+                address(protocolFeeRecipient),
                  liquidationProtocolFee
             );
 

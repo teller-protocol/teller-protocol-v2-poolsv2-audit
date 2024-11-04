@@ -380,6 +380,11 @@ ILoanRepaymentCallbacks
     {}
 
 
+    function getProtocolFeeRecipient () public view returns(address){
+        
+    }
+
+
     function _getBidPaymentCycleType(uint256 _bidId)
         internal
         view
