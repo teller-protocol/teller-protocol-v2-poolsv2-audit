@@ -77,10 +77,10 @@ contract SmartCommitmentForwarder is
         __Ownable_init_unchained();
     }
 
-    //only temporary for polygon 
-    function reinitialize() public reinitializer(1){       
+    //was only temporary in testing environment
+   /* function reinitialize() public reinitializer(1){       
         __Ownable_init_unchained();
-    }
+    }*/
 
 
     function setLiquidationProtocolFeePercent(uint256 _percent) 
