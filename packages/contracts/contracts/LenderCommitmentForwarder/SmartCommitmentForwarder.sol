@@ -24,6 +24,7 @@ import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 
 import { CommitmentCollateralType, ISmartCommitment } from "../interfaces/ISmartCommitment.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
  
 contract SmartCommitmentForwarder is
@@ -31,6 +32,7 @@ contract SmartCommitmentForwarder is
     TellerV2MarketForwarder_G3,
     PausableUpgradeable,  //this does add some storage but AFTER all other storage
     ReentrancyGuardUpgradeable,  //adds many storage slots so breaks upgradeability 
+    OwnableUpgradeable, 
     OracleProtectionManager,  //uses deterministic  storage slots 
     ISmartCommitmentForwarder,
     IPausableTimestamp
@@ -72,7 +74,15 @@ contract SmartCommitmentForwarder is
 
     function initialize() public initializer {       
         __Pausable_init();
+        __Ownable_init_unchained();
     }
+
+    //only temporary for polygon 
+    function reinitialize() public reinitializer(1){       
+      
+        __Ownable_init_unchained();
+    }
+
 
     function setLiquidationProtocolFeePercent(uint256 _percent) 
     public onlyProtocolOwner { 
