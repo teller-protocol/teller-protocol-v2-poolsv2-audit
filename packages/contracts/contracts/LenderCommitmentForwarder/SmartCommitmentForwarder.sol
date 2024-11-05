@@ -26,6 +26,25 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import { CommitmentCollateralType, ISmartCommitment } from "../interfaces/ISmartCommitment.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
+
+/*  
+The smart commitment forwarder is the central hub for activity related to Lender Group Pools, also knnown as SmartCommitments.
+
+Users of teller protocol can set this contract as a TrustedForwarder to allow it to conduct lending activity on their behalf.
+
+Users can also approve Extensions, such as Rollover, which will allow the extension to conduct loans on the users behalf through this forwarder by way of overrides to _msgSender() using the last 20 bytes of delegatecall. 
+
+
+ROLES 
+
+    The owner of this contract can call setOracle and setIsStrictMode
+
+    The protocol owner can mofidy the liquidation fee percent 
+
+    Any protocol pauser can pause and unpause this contract 
+
+    Anyone can call  registerOracle  to register a contract for use (firewall access)
+*/
  
 contract SmartCommitmentForwarder is
     ExtensionsContextUpgradeable, //this should always be first for upgradeability
