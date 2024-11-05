@@ -356,9 +356,11 @@ fn map_lendergroup_events(
         .flat_map(|view| {
             view.receipt.logs.iter()
                 .filter(|log| 
-                    
-                    //is_declared_dds_address(&log.address, log.ordinal, dds_store)
-                    true
+                        
+
+                    //this is a massive problem 
+                    is_declared_dds_address(&log.address, log.ordinal, dds_store)
+                   // true
                     
                     )
                 .filter_map(|log| {
@@ -654,6 +656,8 @@ fn graph_lendergroup_out(
        //create group pool metric 
        tables
             .create_row("group_pool_metric", format!("{}", evt.evt_address )  ) 
+
+            .set("created_at", BigInt::from(evt.evt_block_time))
            
             .set("group_pool_address", Hex::decode(&evt.evt_address).unwrap() )
             .set("principal_token_address",  &evt.principal_token_address  )

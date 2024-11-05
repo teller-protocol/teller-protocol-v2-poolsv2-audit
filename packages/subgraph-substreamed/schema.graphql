@@ -167,6 +167,8 @@ type group_pool_bid @entity {
 type group_pool_metric @entity {
     id: ID!    #will be based on group pool address 
     group_pool_address: Bytes!
+
+    created_at: BigInt!
     
     principal_token_address: Bytes!
     collateral_token_address: Bytes!
