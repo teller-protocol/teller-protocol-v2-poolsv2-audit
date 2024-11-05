@@ -45,9 +45,9 @@ make && make build && make pack
 
 
 graph auth --studio  
- graph deploy --studio tellerv2-lender-groups-polygon
+ graph deploy --studio tellerv2-lender-groups-polygon --version-label 0.4.21.115
  
- 0.4.21.114
+ 0.4.21.115
 
 
 
