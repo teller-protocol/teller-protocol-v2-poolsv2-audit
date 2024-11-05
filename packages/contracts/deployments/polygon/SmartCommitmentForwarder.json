@@ -468,6 +468,14 @@
     },
     {
       "type": "function",
+      "name": "reinitialize",
+      "constant": false,
+      "payable": false,
+      "inputs": [],
+      "outputs": []
+    },
+    {
+      "type": "function",
       "name": "renounceOwnership",
       "constant": false,
       "payable": false,
@@ -555,6 +563,6 @@
     "blockHash": null,
     "blockNumber": null
   },
-  "numDeployments": 2,
+  "numDeployments": 3,
   "implementation": "0xb4D81863b0bDef8FF372d44c161a1a025d788A7a"
 }

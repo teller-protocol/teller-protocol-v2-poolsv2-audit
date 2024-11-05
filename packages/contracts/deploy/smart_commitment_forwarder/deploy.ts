@@ -12,8 +12,10 @@ const deployFn: DeployFunction = async (hre) => {
         await tellerV2.getAddress(),
         await marketRegistry.getAddress(),
       ],
+      initializer : "initialize" 
     }
   )
+  //how is initializer called ??
 
   return true
 }

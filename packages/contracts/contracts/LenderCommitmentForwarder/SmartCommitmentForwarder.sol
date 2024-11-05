@@ -79,7 +79,6 @@ contract SmartCommitmentForwarder is
 
     //only temporary for polygon 
     function reinitialize() public reinitializer(1){       
-      
         __Ownable_init_unchained();
     }
 

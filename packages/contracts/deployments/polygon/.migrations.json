@@ -41,5 +41,6 @@
   "lender-commitment-group-factory:deploy": 1730397817,
   "lender-commitment-group-beacon:upgrade-2": 1730738007,
   "teller-v2:proto-fee-upgrade": 1730743035,
-  "hypernative-oracle-mock:deploy": 1730841179
+  "hypernative-oracle-mock:deploy": 1730841179,
+  "smart-commitment-forwarder:upgrade-initializer": 1730842315
 }

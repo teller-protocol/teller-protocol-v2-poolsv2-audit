@@ -15,10 +15,10 @@ const deployFn: DeployFunction = async (hre) => {
   )
 
   await hre.upgrades.proposeBatchTimelock({
-    title: 'Smart Commitment Forwarder: Upgrade',
+    title: 'Smart Commitment Forwarder: Upgrade Owner',
     description: ` 
 # Smart Commitment Forwarder
-* Modifies Smart Commitment Forwarder to add pausing controls and liquidation fee amounts.
+* Modifies Smart Commitment Forwarder to add proper ownable control.
 `,
     _steps: [
       {
@@ -35,6 +35,12 @@ const deployFn: DeployFunction = async (hre) => {
             await tellerV2.getAddress(),
             await marketRegistry.getAddress(),
           ],
+
+          call: {
+            fn: 'reinitialize',
+            args:  [],
+          },
+           
         },
       },
     ],
@@ -48,8 +54,8 @@ const deployFn: DeployFunction = async (hre) => {
 }
 
 // tags and deployment
-deployFn.id = 'smart-commitment-forwarder:upgrade-pausing'
-deployFn.tags = ['proposal', 'upgrade', 'smart-commitment-forwarder-upgrade-pausing']
+deployFn.id = 'smart-commitment-forwarder:upgrade-initializer'
+deployFn.tags = ['proposal', 'upgrade', 'smart-commitment-forwarder-upgrade-initializer']
 deployFn.dependencies = ['smart-commitment-forwarder:deploy']
 deployFn.skip = async (hre) => {
   //  return true // ALWAYS SKIP FOR NOW
