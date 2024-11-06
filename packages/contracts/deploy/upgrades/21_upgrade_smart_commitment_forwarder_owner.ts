@@ -13,12 +13,10 @@ const deployFn: DeployFunction = async (hre) => {
   const smartCommitmentForwarder = await hre.contracts.get(
     'SmartCommitmentForwarder'
   )
-
- 
  
 
   await hre.upgrades.proposeBatchTimelock({
-    title: 'Smart Commitment Forwarder: Upgrade Oracle Logic',
+    title: 'Smart Commitment Forwarder: Upgrade Oracle Logic 2',
     description: ` 
 # Smart Commitment Forwarder
 * Modifies Smart Commitment Forwarder to change oracle security logic.
