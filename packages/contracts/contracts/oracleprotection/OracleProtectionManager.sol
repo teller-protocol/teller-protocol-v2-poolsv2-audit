@@ -76,7 +76,8 @@ IOracleProtectionManager, OwnableUpgradeable
              
             return true;
         }
-        
+
+        //smart contracts are blocked if blacklisted or if havent registered and waited
         IHypernativeOracle oracle = IHypernativeOracle(oracleAddress);
         if (oracle.isBlacklistedContext( tx.origin,_sender) || !oracle.isTimeExceeded(_sender)) {
             return false;
