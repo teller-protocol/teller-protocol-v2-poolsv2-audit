@@ -463,7 +463,8 @@ contract LenderCommitmentGroup_Smart is
         uint256 _amount,
         address _sharesRecipient,
         uint256 _minSharesAmountOut
-    ) external whenForwarderNotPaused whenNotPaused nonReentrant onlyOracleApprovedAllowEOA returns (uint256 sharesAmount_) {
+    ) external whenForwarderNotPaused whenNotPaused nonReentrant onlyOracleApprovedAllowEOA 
+    returns (uint256 sharesAmount_) {
         //transfers the primary principal token from msg.sender into this contract escrow
 
        
@@ -599,7 +600,8 @@ contract LenderCommitmentGroup_Smart is
 
     function prepareSharesForWithdraw(
         uint256 _amountPoolSharesTokens 
-    ) external whenForwarderNotPaused whenNotPaused nonReentrant returns (bool) {
+    ) external whenForwarderNotPaused whenNotPaused nonReentrant
+     returns (bool) {
         
         return _prepareSharesForWithdraw(msg.sender, _amountPoolSharesTokens); 
     }
@@ -634,7 +636,8 @@ contract LenderCommitmentGroup_Smart is
         uint256 _amountPoolSharesTokens,
         address _recipient,
         uint256 _minAmountOut
-    ) external whenForwarderNotPaused whenNotPaused  nonReentrant onlyOracleApprovedAllowEOA returns (uint256) {
+    ) external whenForwarderNotPaused whenNotPaused  nonReentrant onlyOracleApprovedAllowEOA 
+    returns (uint256) {
        
         require(poolSharesPreparedToWithdrawForLender[msg.sender] >= _amountPoolSharesTokens,"Shares not prepared for withdraw");
         require(poolSharesPreparedTimestamp[msg.sender] <= block.timestamp - withdrawlDelayTimeSeconds,"Shares not prepared for withdraw");

@@ -40,6 +40,23 @@ interface ILenderCommitmentGroup {
     ) external returns (uint256 sharesAmount_);
 
 
+
+     function prepareSharesForWithdraw(
+        uint256 _amountPoolSharesTokens 
+    ) external returns (bool);
+
+     function  burnSharesToWithdrawEarnings(
+        uint256 _amountPoolSharesTokens,
+        address _recipient,
+        uint256 _minAmountOut
+    ) external returns (uint256);
+
+
+     function liquidateDefaultedLoanWithIncentive(
+        uint256 _bidId,
+        int256 _tokenAmountDifference
+    ) external ;
+
     function getTokenDifferenceFromLiquidations() external view returns (int256);
 
 }
