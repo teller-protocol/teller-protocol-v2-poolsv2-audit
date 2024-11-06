@@ -6,16 +6,19 @@ const deployFn: DeployFunction = async (hre) => {
   hre.log('Smart Commitment Forwarder: Proposing upgrade...')
 
   const tellerV2 = await hre.contracts.get('TellerV2')
+ 
   const marketRegistry = await hre.contracts.get('MarketRegistry')
 
- 
-
+  
   const smartCommitmentForwarder = await hre.contracts.get(
     'SmartCommitmentForwarder'
   )
 
+ 
+ 
+
   await hre.upgrades.proposeBatchTimelock({
-    title: 'Smart Commitment Forwarder: Upgrade Owner',
+    title: 'Smart Commitment Forwarder: Upgrade Owner 2',
     description: ` 
 # Smart Commitment Forwarder
 * Modifies Smart Commitment Forwarder to add proper ownable control.
@@ -29,7 +32,7 @@ const deployFn: DeployFunction = async (hre) => {
 
         opts: {
           unsafeAllow: ['constructor', 'state-variable-immutable'],
-          unsafeAllowRenames: true,
+          // unsafeAllowRenames: true,
           // unsafeSkipStorageCheck: true, //caution !
           constructorArgs: [
             await tellerV2.getAddress(),
@@ -58,7 +61,8 @@ deployFn.id = 'smart-commitment-forwarder:upgrade-initializer'
 deployFn.tags = ['proposal', 'upgrade', 'smart-commitment-forwarder-upgrade-initializer']
 deployFn.dependencies = ['smart-commitment-forwarder:deploy']
 deployFn.skip = async (hre) => {
-  //  return true // ALWAYS SKIP FOR NOW
+  
   return !hre.network.live || !['sepolia','polygon' ].includes(hre.network.name)
 }
 export default deployFn
+

@@ -97,9 +97,9 @@ contract SmartCommitmentForwarder is
     }
 
     //was only temporary in testing environment
-   /* function reinitialize() public reinitializer(1){       
+    function reinitialize() public reinitializer(2){       
         __Ownable_init_unchained();
-    }*/
+    }
 
 
     function setLiquidationProtocolFeePercent(uint256 _percent) 
