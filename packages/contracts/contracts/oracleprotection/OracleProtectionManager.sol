@@ -19,7 +19,21 @@ IOracleProtectionManager, OwnableUpgradeable
    // event OracleAdminChanged(address indexed previousAdmin, address indexed newAdmin);
     event OracleAddressChanged(address indexed previousOracle, address indexed newOracle);
 
-    
+
+
+    modifier onlyOracleApproved() {
+         
+        require( isOracleApproved(msg.sender ) , "Oracle: Not Approved");
+        _;
+    }
+
+    modifier onlyOracleApprovedAllowEOA() {
+       
+        require( isOracleApprovedAllowEOA(msg.sender ) , "Oracle: Not Approved");
+        _;
+    }
+
+
  
 
     function oracleRegister(address _account) public virtual {
@@ -36,7 +50,7 @@ IOracleProtectionManager, OwnableUpgradeable
 
 
 
-     function isOracleApproved(address _sender) external returns (bool) {
+     function isOracleApproved(address _sender) public returns (bool) {
         address oracleAddress = _hypernativeOracle();
         if (oracleAddress == address(0)) { 
             return true;
@@ -49,7 +63,7 @@ IOracleProtectionManager, OwnableUpgradeable
      }
 
     // only allow EOA to interact 
-    function isOracleApprovedOnlyAllowEOA(address _sender) external returns (bool){
+    function isOracleApprovedOnlyAllowEOA(address _sender) public returns (bool){
         address oracleAddress = _hypernativeOracle();
         if (oracleAddress == address(0)) {
              
@@ -63,7 +77,7 @@ IOracleProtectionManager, OwnableUpgradeable
         return true ;
     }
 
-    function isOracleApprovedAllowEOA(address _sender) external returns (bool){
+    function isOracleApprovedAllowEOA(address _sender) public returns (bool){
         address oracleAddress = _hypernativeOracle();
     
         if (oracleAddress == address(0)) {
@@ -136,4 +150,6 @@ IOracleProtectionManager, OwnableUpgradeable
     function _hypernativeOracle() private view returns (address) {
         return _getAddressBySlot(HYPERNATIVE_ORACLE_STORAGE_SLOT);
     }
+
+
 }

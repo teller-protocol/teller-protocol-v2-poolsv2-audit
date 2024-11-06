@@ -131,7 +131,7 @@ contract SmartCommitmentForwarder is
         address _recipient,
         uint16 _interestRate,
         uint32 _loanDuration
-    ) public whenNotPaused nonReentrant returns (uint256 bidId) {
+    ) public whenNotPaused nonReentrant onlyOracleApprovedAllowEOA returns (uint256 bidId) {
         require(
             ISmartCommitment(_smartCommitmentAddress)
                 .getCollateralTokenType() <=
