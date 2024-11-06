@@ -87,7 +87,7 @@ contract LenderGroupMockInteract {
             _minAmountOut
         );
 
-         IERC20(_sharesToken).transfer(msg.sender, amountOut);
+         IERC20(_principalToken).transfer(msg.sender, amountOut);
     }
 
     /**
