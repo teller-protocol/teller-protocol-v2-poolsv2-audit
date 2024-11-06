@@ -375,7 +375,7 @@
       "inputs": [
         {
           "type": "address",
-          "name": "_msgSender"
+          "name": "_sender"
         }
       ],
       "outputs": [
@@ -393,7 +393,25 @@
       "inputs": [
         {
           "type": "address",
-          "name": "_msgSender"
+          "name": "_sender"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "bool",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "isOracleApprovedOnlyAllowEOA",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_sender"
         }
       ],
       "outputs": [
@@ -555,6 +573,6 @@
     "blockHash": null,
     "blockNumber": null
   },
-  "numDeployments": 5,
+  "numDeployments": 6,
   "implementation": "0xb4D81863b0bDef8FF372d44c161a1a025d788A7a"
 }
