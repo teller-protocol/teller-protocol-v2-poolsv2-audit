@@ -18,10 +18,10 @@ const deployFn: DeployFunction = async (hre) => {
  
 
   await hre.upgrades.proposeBatchTimelock({
-    title: 'Smart Commitment Forwarder: Upgrade Owner 3',
+    title: 'Smart Commitment Forwarder: Upgrade Oracle Logic',
     description: ` 
 # Smart Commitment Forwarder
-* Modifies Smart Commitment Forwarder to add proper ownable control.
+* Modifies Smart Commitment Forwarder to change oracle security logic.
 `,
     _steps: [
       {

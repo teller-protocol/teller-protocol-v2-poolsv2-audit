@@ -79,23 +79,23 @@ IOracleProtectionManager, OwnableUpgradeable
 
     function isOracleApprovedAllowEOA(address _sender) public returns (bool){
         address oracleAddress = _hypernativeOracle();
-    
+
+        //without an oracle address set, allow all through 
         if (oracleAddress == address(0)) {
-             
             return true;
         }
 
-        //EOA accounts always allowed 
-        if ( _sender == tx.origin) {
-             
-            return true;
-        }
-
-        //smart contracts are blocked if blacklisted or if havent registered and waited
+        // any accounts are blocked if blacklisted
         IHypernativeOracle oracle = IHypernativeOracle(oracleAddress);
-        if (oracle.isBlacklistedContext( tx.origin,_sender) || !oracle.isTimeExceeded(_sender)) {
+        if (oracle.isBlacklistedContext( tx.origin,_sender) ){
             return false;
         }
+        
+        //smart contracts (delegate calls) are blocked if they havent registered and waited
+        if (  _sender != tx.origin  && !oracle.isTimeExceeded(_sender)) {
+            return false;
+        }
+
         return true ;
     }
     

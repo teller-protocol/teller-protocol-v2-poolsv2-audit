@@ -37,9 +37,8 @@ Users can also approve Extensions, such as Rollover, which will allow the extens
 
 ROLES 
 
-    The owner of this contract can call setOracle and setIsStrictMode
-
-    The protocol owner can mofidy the liquidation fee percent 
+   
+    The protocol owner can modify the liquidation fee percent , call setOracle and setIsStrictMode
 
     Any protocol pauser can pause and unpause this contract 
 
