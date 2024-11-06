@@ -51,7 +51,7 @@ contract SmartCommitmentForwarder is
     TellerV2MarketForwarder_G3,
     PausableUpgradeable,  //this does add some storage but AFTER all other storage
     ReentrancyGuardUpgradeable,  //adds many storage slots so breaks upgradeability 
-    OwnableUpgradeable, 
+    OwnableUpgradeable, //deprecated
     OracleProtectionManager,  //uses deterministic  storage slots 
     ISmartCommitmentForwarder,
     IPausableTimestamp
@@ -95,12 +95,7 @@ contract SmartCommitmentForwarder is
         __Pausable_init();
         __Ownable_init_unchained();
     }
-
-    //was only temporary in testing environment
-    function reinitialize() public reinitializer(2){       
-        __Ownable_init_unchained();
-    }
-
+ 
 
     function setLiquidationProtocolFeePercent(uint256 _percent) 
     public onlyProtocolOwner { 
@@ -284,6 +279,15 @@ contract SmartCommitmentForwarder is
     function setLastUnpausedAt() internal {
         lastUnpausedAt =  block.timestamp;
     }
+
+
+     function setOracle(address _oracle) external onlyProtocolOwner {
+         _setOracle(_oracle);
+     } 
+
+     function setIsStrictMode(bool _mode) external onlyProtocolOwner {
+         _setIsStrictMode(_mode);
+     } 
 
 
     // -----

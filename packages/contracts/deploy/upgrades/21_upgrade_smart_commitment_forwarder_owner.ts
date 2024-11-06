@@ -18,7 +18,7 @@ const deployFn: DeployFunction = async (hre) => {
  
 
   await hre.upgrades.proposeBatchTimelock({
-    title: 'Smart Commitment Forwarder: Upgrade Owner 2',
+    title: 'Smart Commitment Forwarder: Upgrade Owner 3',
     description: ` 
 # Smart Commitment Forwarder
 * Modifies Smart Commitment Forwarder to add proper ownable control.

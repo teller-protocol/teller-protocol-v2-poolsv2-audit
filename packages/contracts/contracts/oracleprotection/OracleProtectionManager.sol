@@ -63,18 +63,15 @@ IOracleProtectionManager, OwnableUpgradeable
     }
     
     
-    
-    
-    /**
-     * @dev Admin only function, sets new oracle admin. set to address(0) to revoke oracle
-     */
-    function setOracle(address _oracle) public onlyOwner() {
+
+    function _setOracle(address _oracle) internal {
         address oldOracle = _hypernativeOracle();
         _setAddressBySlot(HYPERNATIVE_ORACLE_STORAGE_SLOT, _oracle);
         emit OracleAddressChanged(oldOracle, _oracle);
     }
+    
 
-    function setIsStrictMode(bool _mode) public onlyOwner() {
+    function _setIsStrictMode(bool _mode) internal {
         _setValueBySlot(HYPERNATIVE_MODE_STORAGE_SLOT, _mode ? 1 : 0);
     }
 
