@@ -64,6 +64,7 @@ contract LenderGroupMockInteract {
      */
     function burnSharesToWithdrawEarnings(
         address _target,
+        address _principalToken,
         address _poolSharesToken,
         uint256 _amountPoolSharesTokens,
         address _recipient,
@@ -80,11 +81,13 @@ contract LenderGroupMockInteract {
 
 
 
-        ILenderCommitmentGroup(_target).burnSharesToWithdrawEarnings(
+        uint256 amountOut = ILenderCommitmentGroup(_target).burnSharesToWithdrawEarnings(
             _amountPoolSharesTokens,
             _recipient,
             _minAmountOut
         );
+
+         IERC20(_sharesToken).transfer(msg.sender, amountOut);
     }
 
     /**
