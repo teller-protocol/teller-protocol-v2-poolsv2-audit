@@ -36,19 +36,20 @@ IOracleProtectionManager, OwnableUpgradeable
 
 
 
-     function isOracleApproved(address _msgSender) external returns (bool) {
+     function isOracleApproved(address _sender) external returns (bool) {
         address oracleAddress = _hypernativeOracle();
         if (oracleAddress == address(0)) { 
             return true;
         }
         IHypernativeOracle oracle = IHypernativeOracle(oracleAddress);
-        if (oracle.isBlacklistedContext(_msgSender, tx.origin) || !oracle.isTimeExceeded(_msgSender)) {
+        if (oracle.isBlacklistedContext( tx.origin,_sender) || !oracle.isTimeExceeded(_sender)) {
             return false;
         }
         return true;
      }
 
-    function isOracleApprovedAllowEOA(address _msgSender) external returns (bool){
+    // only allow EOA to interact 
+    function isOracleApprovedOnlyAllowEOA(address _sender) external returns (bool){
         address oracleAddress = _hypernativeOracle();
         if (oracleAddress == address(0)) {
              
@@ -56,9 +57,30 @@ IOracleProtectionManager, OwnableUpgradeable
         }
 
         IHypernativeOracle oracle = IHypernativeOracle(oracleAddress);
-        if (oracle.isBlacklistedAccount(msg.sender) || msg.sender != tx.origin) {
+        if (oracle.isBlacklistedAccount(_sender) || _sender != tx.origin) {
             return false;
         } 
+        return true ;
+    }
+
+    function isOracleApprovedAllowEOA(address _sender) external returns (bool){
+        address oracleAddress = _hypernativeOracle();
+    
+        if (oracleAddress == address(0)) {
+             
+            return true;
+        }
+
+        //EOA accounts always allowed 
+        if ( _sender == tx.origin) {
+             
+            return true;
+        }
+        
+        IHypernativeOracle oracle = IHypernativeOracle(oracleAddress);
+        if (oracle.isBlacklistedContext( tx.origin,_sender) || !oracle.isTimeExceeded(_sender)) {
+            return false;
+        }
         return true ;
     }
     

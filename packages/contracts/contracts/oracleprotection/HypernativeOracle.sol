@@ -127,6 +127,7 @@ contract HypernativeOracle is AccessControl {
         _revokeRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
+    //if true, the account has been registered for two minutes 
     function isTimeExceeded(address account) external onlyConsumer() view returns (bool) {
         bytes32 hashedAccount = keccak256(abi.encodePacked(account, address(this)));
         require(accountHashToRecord[hashedAccount].registrationTime != 0, "Account not registered");
