@@ -125,7 +125,16 @@ const networkUrls: Record<NetworkNames, string> = {
     (ALCHEMY_API_KEY
       ? `https://arb-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
       : ''),
-  base: 'https://mainnet.base.org/',
+  
+  base:
+  process.env.BASE_RPC_URL ??
+  (ALCHEMY_API_KEY
+    ? `https://base-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
+    : ''),
+
+
+  
+
   mantle: 'https://rpc.mantle.xyz',
 
   // Test Networks
