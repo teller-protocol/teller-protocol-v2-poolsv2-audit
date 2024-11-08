@@ -58,6 +58,7 @@ contract LenderCommitmentForwarder_U1 is
     mapping(uint256 => EnumerableSetUpgradeable.AddressSet)
         internal commitmentBorrowersList;
 
+    //commitment id => amount 
     mapping(uint256 => uint256) public commitmentPrincipalAccepted;
 
     mapping(uint256 => PoolRouteConfig[]) internal commitmentUniswapPoolRoutes;
@@ -535,7 +536,7 @@ contract LenderCommitmentForwarder_U1 is
         );
 
         require(
-            commitmentPrincipalAccepted[bidId] <= commitment.maxPrincipal,
+            commitmentPrincipalAccepted[_commitmentId] <= commitment.maxPrincipal,
             "Invalid loan max principal"
         );
 
