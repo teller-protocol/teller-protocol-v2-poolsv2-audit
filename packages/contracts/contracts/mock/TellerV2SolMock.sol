@@ -29,6 +29,7 @@ ILoanRepaymentCallbacks
     bool public isPausedMock;
 
     address public mockOwner;
+    address public mockProtocolFeeRecipient;
 
 
     PaymentCycleType globalBidPaymentCycleType = PaymentCycleType.Seconds;
@@ -381,7 +382,11 @@ ILoanRepaymentCallbacks
 
 
     function getProtocolFeeRecipient () public view returns(address){
-        
+        return mockProtocolFeeRecipient;
+    }
+
+    function setMockProtocolFeeRecipient(address _address) public {
+        mockProtocolFeeRecipient = _address;
     }
 
 

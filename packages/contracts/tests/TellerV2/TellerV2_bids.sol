@@ -320,7 +320,7 @@ contract TellerV2_bids_test is Testable {
             abi.encodeWithSelector(
                 ActionNotAllowed.selector,
                 bidId,
-                "cancelBid",
+                "CB",
                 "Not bid owner"
             )
         );
@@ -420,7 +420,7 @@ contract TellerV2_bids_test is Testable {
             abi.encodeWithSelector(
                 ActionNotAllowed.selector,
                 bidId,
-                "lenderAcceptBid",
+                "lab",
                 "Bid not pending"
             )
         );
@@ -659,7 +659,7 @@ contract TellerV2_bids_test is Testable {
             abi.encodeWithSelector(
                 ActionNotAllowed.selector,
                 bidId,
-                "repayLoan",
+                "rl",
                 "Loan not accepted"
             )
         );
@@ -700,7 +700,7 @@ contract TellerV2_bids_test is Testable {
             abi.encodeWithSelector(
                 ActionNotAllowed.selector,
                 bidId,
-                "repayLoan",
+                "rl",
                 "Loan not accepted"
             )
         );
@@ -811,7 +811,7 @@ contract TellerV2_bids_test is Testable {
             abi.encodeWithSelector(
                 ActionNotAllowed.selector,
                 bidId,
-                "liquidateLoan",
+                "ll",
                 "Loan not accepted"
             )
         );
