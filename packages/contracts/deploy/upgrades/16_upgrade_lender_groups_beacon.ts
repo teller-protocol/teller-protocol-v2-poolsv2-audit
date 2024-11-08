@@ -43,11 +43,11 @@ const deployFn: DeployFunction = async (hre) => {
 
 
   await hre.upgrades.proposeBatchTimelock({
-    title: 'LenderGroups: Liquidation Repayment Accounting',
+    title: 'LenderGroups: PoolOracle View',
     description: ` 
 # LenderGroups
 
-* A patch for liquidation repayment accounting.
+* A patch to add readonly fns for the frontend.
 `,
     _steps: [
       {
@@ -84,7 +84,7 @@ const deployFn: DeployFunction = async (hre) => {
 }
 
 // tags and deployment
-deployFn.id = 'lender-commitment-group-beacon:upgrade'
+deployFn.id = 'lender-commitment-group-beacon:upgrade-pooloracle-view'
 deployFn.tags = ['lender-commitment-group-beacon']
 deployFn.dependencies = [
   'teller-v2:deploy',

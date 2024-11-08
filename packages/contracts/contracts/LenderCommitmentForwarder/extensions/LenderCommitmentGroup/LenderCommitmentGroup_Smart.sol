@@ -897,6 +897,36 @@ contract LenderCommitmentGroup_Smart is
     }
 
 
+     function getUniswapPriceRatioForPoolRoutes(
+       IUniswapPricingLibrary.PoolRouteConfig[] memory poolOracleRoutes
+    ) external view virtual returns (uint256 ) {
+   
+        uint256 pairPriceWithTwapFromOracle = UniswapPricingLibrary
+            .getUniswapPriceRatioForPoolRoutes(poolOracleRoutes);
+       
+
+        return pairPriceWithTwapFromOracle;
+    }
+
+      function getPrincipalForCollateralForPoolRoutes(
+        IUniswapPricingLibrary.PoolRouteConfig[] memory poolOracleRoutes
+    ) external view virtual returns (uint256 ) {
+   
+        uint256 pairPriceWithTwapFromOracle = UniswapPricingLibrary
+            .getUniswapPriceRatioForPoolRoutes(poolOracleRoutes);
+       
+       
+        uint256 principalPerCollateralAmount = maxPrincipalPerCollateralAmount == 0  
+                ? pairPriceWithTwapFromOracle   
+                : Math.min(
+                    pairPriceWithTwapFromOracle,
+                    maxPrincipalPerCollateralAmount //this is expanded by uniswap exp factor  
+                );
+
+
+        return principalPerCollateralAmount;
+    }
+
 
    function getRequiredCollateral(
         uint256 _principalAmount,

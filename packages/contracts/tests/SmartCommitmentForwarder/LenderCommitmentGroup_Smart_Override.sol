@@ -4,7 +4,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-import { LenderCommitmentGroup_Smart } from "../../../../contracts/LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroup_Smart.sol";
+import { LenderCommitmentGroup_Smart } from "../../contracts/LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroup_Smart.sol";
 
 contract LenderCommitmentGroup_Smart_Override is LenderCommitmentGroup_Smart {
     //  bool public submitBidWasCalled;

@@ -43,5 +43,6 @@
   "teller-v2:proto-fee-upgrade": 1730743035,
   "hypernative-oracle-mock:deploy": 1730841179,
   "smart-commitment-forwarder:upgrade-initializer": 1730922791,
-  "lendergroup-mock-interact:deploy": 1730925393
+  "lendergroup-mock-interact:deploy": 1730925393,
+  "lender-commitment-group-beacon:upgrade-pooloracle-view": 1731095903
 }

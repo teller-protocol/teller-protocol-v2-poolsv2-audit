@@ -1,22 +1,22 @@
-import { Testable } from "../../../Testable.sol";
+import { Testable } from "../Testable.sol";
 
 import { LenderCommitmentGroup_Smart_Override } from "./LenderCommitmentGroup_Smart_Override.sol";
 
-import {TestERC20Token} from "../../../tokens/TestERC20Token.sol";
+import {TestERC20Token} from "../tokens/TestERC20Token.sol";
 
 
-import {MarketRegistry} from "../../../../contracts/MarketRegistry.sol";
-import {SmartCommitmentForwarder} from "../../../../contracts/LenderCommitmentForwarder/SmartCommitmentForwarder.sol";
-import {TellerV2SolMock} from "../../../../contracts/mock/TellerV2SolMock.sol";
-import {UniswapV3PoolMock} from "../../../../contracts/mock/uniswap/UniswapV3PoolMock.sol";
-import {UniswapV3FactoryMock} from "../../../../contracts/mock/uniswap/UniswapV3FactoryMock.sol";
-import { PaymentType, PaymentCycleType } from "../../../../contracts/libraries/V2Calculations.sol";
-import { LoanDetails, Payment, BidState , Bid, Terms } from "../../../../contracts/TellerV2Storage.sol";
+import {MarketRegistry} from "../../contracts/MarketRegistry.sol";
+import {SmartCommitmentForwarder} from "../../contracts/LenderCommitmentForwarder/SmartCommitmentForwarder.sol";
+import {TellerV2SolMock} from "../../contracts/mock/TellerV2SolMock.sol";
+import {UniswapV3PoolMock} from "../../contracts/mock/uniswap/UniswapV3PoolMock.sol";
+import {UniswapV3FactoryMock} from "../../contracts/mock/uniswap/UniswapV3FactoryMock.sol";
+import { PaymentType, PaymentCycleType } from "../../contracts/libraries/V2Calculations.sol";
+import { LoanDetails, Payment, BidState , Bid, Terms } from "../../contracts/TellerV2Storage.sol";
 
-import { ILenderCommitmentGroup } from "../../../../contracts/interfaces/ILenderCommitmentGroup.sol";
-import { IUniswapPricingLibrary } from "../../../../contracts/interfaces/IUniswapPricingLibrary.sol";
+import { ILenderCommitmentGroup } from "../../contracts/interfaces/ILenderCommitmentGroup.sol";
+import { IUniswapPricingLibrary } from "../../contracts/interfaces/IUniswapPricingLibrary.sol";
 
-import {ProtocolPausingManager} from "../../../../contracts/pausing/ProtocolPausingManager.sol";
+import {ProtocolPausingManager} from "../../contracts/pausing/ProtocolPausingManager.sol";
 
 
 import "lib/forge-std/src/console.sol";
