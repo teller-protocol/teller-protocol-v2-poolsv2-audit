@@ -16747,6 +16747,16 @@
         },
         "namespaces": {}
       }
+    },
+    "7481f9fe6275ca9fb9bee74e186217bc40905bf60905d243ce509fb517cdf188": {
+      "address": "0x477e59a0CB9027e92E8c1e9B9140fA4f89092ECA",
+      "txHash": "0x75b6ebb4011bf706d0e74467da66d3c51238332c31e1db1c925c89616befa05c",
+      "layout": {
+        "solcVersion": "0.8.9",
+        "storage": [],
+        "types": {},
+        "namespaces": {}
+      }
     }
   }
 }
