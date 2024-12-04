@@ -8,8 +8,7 @@ const deployFn: DeployFunction = async (hre) => {
   const trustedForwarder = await hre.contracts.get('MetaForwarder')
   const v2Calculations = await hre.deployments.get('V2Calculations')
   const tellerV2 = await hre.contracts.get('TellerV2')
-  const marketRegistry = await hre.contracts.get('MarketRegistry')
-  const protocolFee = await hre.contracts.get('ProtocolFee')
+  const marketRegistry = await hre.contracts.get('MarketRegistry') 
   const escrowVault = await hre.contracts.get('EscrowVault')
   const collateralManager = await hre.contracts.get('CollateralManager')
   const collateralEscrowBeacon = await hre.contracts.get(
@@ -33,14 +32,12 @@ const deployFn: DeployFunction = async (hre) => {
 
 # Market Registry
 
-# TellerV2  + V2Calculations 
+# TellerV2  + V2Calculations + ProtocolFee 
  
 # CollateralManager
  
 # CollateralEscrowV1
-
-
-# Protocol Fee 
+ 
 
 
 # Requires deployed new contracts: 
@@ -63,10 +60,7 @@ const deployFn: DeployFunction = async (hre) => {
         implFactory: await hre.ethers.getContractFactory('MarketRegistry'),
       },
 
-      {
-        proxy: protocolFee,
-        implFactory: await hre.ethers.getContractFactory('ProtocolFee'),
-      },
+      
       {
         proxy: tellerV2,
         implFactory: await hre.ethers.getContractFactory('TellerV2', {
@@ -76,6 +70,7 @@ const deployFn: DeployFunction = async (hre) => {
         }),
 
         opts: {
+            unsafeSkipStorageCheck: true, // this is due to the HasProtocolPausingManager which we have tested to not break storage slots 
           unsafeAllow: [
             'constructor',
             'state-variable-immutable',
@@ -131,19 +126,20 @@ const deployFn: DeployFunction = async (hre) => {
 }
 
 // tags and deployment
-deployFn.id = 'sherlock-audit:upgrade'
+deployFn.id = 'lender-groups:upgrade'
 deployFn.tags = [
   'proposal',
   'upgrade',
-  'sherlock-audit',
-  'sherlock-audit:upgrade',
+  'lender-groups',
+  'lender-groups:upgrade',
 ]
 deployFn.dependencies = [
-  'default-proxy-admin',
+  'lender-commitment-group-factory:deploy',
+  'protocol-pausing-manager:deploy',
   'market-registry:deploy',
   'teller-v2:v2-calculations',
   'teller-v2:init',
-  'escrow-vault:deploy',
+  'smart-commitment-forwarder:deploy',
 ]
 deployFn.skip = async (hre) => {
   return (
