@@ -11,4 +11,9 @@ const deployFn: DeployFunction = async (hre) => {
 deployFn.id = 'teller-v2:uniswap-pricing-library'
 deployFn.tags = ['teller-v2', 'teller-v2:uniswap-pricing-library']
 deployFn.dependencies = ['']
+
+
+deployFn.skip = async (hre) => {
+  return !hre.network.live || !['sepolia', 'polygon' , 'mainnet'].includes(hre.network.name)
+}
 export default deployFn
