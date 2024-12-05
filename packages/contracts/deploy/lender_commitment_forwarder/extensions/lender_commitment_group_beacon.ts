@@ -35,6 +35,7 @@ const deployFn: DeployFunction = async (hre) => {
   let uniswapV3FactoryAddress: string
   switch (hre.network.name) {
     case 'mainnet':
+    case 'mainnet_live_fork':
     case 'goerli':
     case 'arbitrum':
     case 'optimism':
@@ -99,6 +100,6 @@ deployFn.dependencies = [
 ]
 
 deployFn.skip = async (hre) => {
-  return !hre.network.live || !['sepolia', 'polygon' , 'mainnet'].includes(hre.network.name)
+  return !hre.network.live || !['sepolia', 'polygon' , 'mainnet','mainnet_live_fork'].includes(hre.network.name)
 }
 export default deployFn

@@ -394,11 +394,14 @@ export default <HardhatUserConfig>{
     }),
 
     /*
+    TO PERFORM A MAINNET_LIVE_FORK:  (test upgrades , etc) 
 
       Create a live fork on Tenderly 
       Put that RPC url into 'MAINNET_LIVE_FORK_RPC_URL' in .env 
+
+      copy the contents of deploy/mainnet to deploy/mainnet_live_fork 
       Run the command   yarn contracts deploy --network mainnet_live_fork 
-      This will 
+      This will run the deploy scripts on the live fork 
     */
       mainnet_live_fork: networkConfig({
         url: networkUrls['mainnet-live-fork'],
@@ -418,7 +421,7 @@ export default <HardhatUserConfig>{
         },
       }),
 
-      
+
     polygon: networkConfig({
       url: networkUrls.polygon,
       chainId: 137,
