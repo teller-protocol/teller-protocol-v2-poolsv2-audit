@@ -98,6 +98,7 @@ const accounts: HardhatNetworkHDAccountsUserConfig = {
 
 type NetworkNames =
   | 'mainnet'
+  | 'mainnet-live-fork'
   | 'polygon'
   | 'arbitrum'
   | 'base'
@@ -115,6 +116,11 @@ const networkUrls: Record<NetworkNames, string> = {
     (ALCHEMY_API_KEY
       ? `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
       : ''),
+  
+   'mainnet-live-fork':
+      process.env.MAINNET_LIVE_FORK_RPC_URL ??  '',
+
+
   polygon:
     process.env.POLYGON_RPC_URL ??
     (ALCHEMY_API_KEY
@@ -204,6 +210,7 @@ export default <HardhatUserConfig>{
       goerli: process.env.ETHERSCAN_VERIFY_API_KEY,
       mumbai: process.env.POLYGONSCAN_VERIFY_API_KEY,
       'mantle-testnet': process.env.MANTLE_VERIFY_API_KEY ?? 'xyz',
+      'mainnet-live-fork': '',
     },
     customChains: [
       {
@@ -385,6 +392,33 @@ export default <HardhatUserConfig>{
         },
       },
     }),
+
+    /*
+
+      Create a live fork on Tenderly 
+      Put that RPC url into 'MAINNET_LIVE_FORK_RPC_URL' in .env 
+      Run the command   yarn contracts deploy --network mainnet_live_fork 
+      This will 
+    */
+      mainnet_live_fork: networkConfig({
+        url: networkUrls['mainnet-live-fork'],
+        chainId: 1,
+        live: true,
+  
+        saveDeployments: false,
+        /*forking: {
+          enabled: true,
+          url: "" // ???
+        },*/
+        
+        verify: {
+          etherscan: {
+            apiKey: process.env.ETHERSCAN_VERIFY_API_KEY,
+          },
+        },
+      }),
+
+      
     polygon: networkConfig({
       url: networkUrls.polygon,
       chainId: 137,
