@@ -1,5 +1,5 @@
 {
-  "address": "0x7744dc954117540240232867584065CC317a9877",
+  "address": "0x3cd0BB0D282F44D46EeD4de1A107CA075AAD0E7e",
   "abi": [
     {
       "type": "constructor",
@@ -107,54 +107,20 @@
       "payable": false,
       "inputs": [
         {
-          "type": "address",
-          "name": "_lenderCommitmentForwarder"
+          "type": "uint16",
+          "name": "marketFeePct"
+        },
+        {
+          "type": "uint16",
+          "name": "protocolFeePct"
         },
         {
           "type": "uint256",
           "name": "_loanId"
         },
         {
-          "type": "tuple",
-          "name": "_commitmentArgs",
-          "components": [
-            {
-              "type": "uint256",
-              "name": "commitmentId"
-            },
-            {
-              "type": "address",
-              "name": "smartCommitmentAddress"
-            },
-            {
-              "type": "uint256",
-              "name": "principalAmount"
-            },
-            {
-              "type": "uint256",
-              "name": "collateralAmount"
-            },
-            {
-              "type": "uint256",
-              "name": "collateralTokenId"
-            },
-            {
-              "type": "address",
-              "name": "collateralTokenAddress"
-            },
-            {
-              "type": "uint16",
-              "name": "interestRate"
-            },
-            {
-              "type": "uint32",
-              "name": "loanDuration"
-            },
-            {
-              "type": "bytes32[]",
-              "name": "merkleProof"
-            }
-          ]
+          "type": "uint256",
+          "name": "principalAmount"
         },
         {
           "type": "uint256",
@@ -210,6 +176,48 @@
       "outputs": [
         {
           "type": "bool",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getMarketFeePct",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_marketId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint16",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "getMarketIdForCommitment",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "_lenderCommitmentForwarder"
+        },
+        {
+          "type": "uint256",
+          "name": "_commitmentId"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
           "name": ""
         }
       ]
@@ -290,7 +298,7 @@
       "outputs": []
     }
   ],
-  "transactionHash": "0xbe83cec680cd2b485a01e016d487ac0f383be89063e26e6599d5678be88b53ec",
+  "transactionHash": "0xde34c88ffaa9e52a9a0e0cdc417178dee2a7f9a7982d1891f9f13ec2f176dc8d",
   "receipt": {
     "to": null,
     "from": "0xD9B023522CeCe02251d877bb0EB4f06fDe6F98E6",
@@ -298,5 +306,5 @@
     "blockNumber": null
   },
   "numDeployments": 1,
-  "implementation": "0x0a356048b341560ac200275B6D82926568d1e48e"
+  "implementation": "0x477e59a0CB9027e92E8c1e9B9140fA4f89092ECA"
 }
