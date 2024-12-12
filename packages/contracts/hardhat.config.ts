@@ -405,7 +405,7 @@ export default <HardhatUserConfig>{
     */
       mainnet_live_fork: networkConfig({
         url: networkUrls['mainnet-live-fork'],
-        chainId: 1,
+        chainId: 100000001,   // use this custom chain id ! 
         live: true,
   
         saveDeployments: false,
