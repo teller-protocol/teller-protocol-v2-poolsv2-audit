@@ -10,10 +10,14 @@ const deployFn: DeployFunction = async (hre) => {
         
       ],
 
-        //call init with no args    this works fine 
+        //call init with no args    this works fine (i think ? )
+        initializer : "initialize" , 
       initArgs: [
         
       ],
+ 
+
+       
     }
   )
 
