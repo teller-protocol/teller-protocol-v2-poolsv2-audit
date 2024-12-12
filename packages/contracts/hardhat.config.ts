@@ -416,17 +416,20 @@ export default <HardhatUserConfig>{
         chainId: 100000001,   // use this custom chain id ! 
         live: true,
   
-        saveDeployments: false,
-        /*forking: {
-          enabled: true,
-          url: "" // ???
-        },*/
+        saveDeployments: true,
+
         
-        verify: {
+         forking:  {
+              enabled: true,
+              url: networkUrls['mainnet'],
+              // blockNumber: getLatestDeploymentBlock(HARDHAT_DEPLOY_FORK),
+            }, 
+        
+        /*verify: {
           etherscan: {
             apiKey: process.env.ETHERSCAN_VERIFY_API_KEY,
           },
-        },
+        },*/
       }),
 
 
