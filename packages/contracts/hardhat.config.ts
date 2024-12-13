@@ -335,6 +335,7 @@ export default <HardhatUserConfig>{
       31337: 7,
       1: '0x9E3bfee4C6b4D28b5113E4786A1D9812eB3D2Db6',
       100000001: '0x9E3bfee4C6b4D28b5113E4786A1D9812eB3D2Db6',
+      100000002: '0x9E3bfee4C6b4D28b5113E4786A1D9812eB3D2Db6',
       5: '0x0061CA4F1EB8c3FF93Df074061844d3dd4dC0377',
       137: '0xFea0FB908E31567CaB641865212cF76BE824D848',
       5000: '0x4496c03dA72386255Bf4af60b3CCe07787d3dCC2',
@@ -346,6 +347,7 @@ export default <HardhatUserConfig>{
       31337: 8,
       1: '0xe6774DAAEdf6e95b222CD3dE09456ec0a46672C4',
       100000001: '0xe6774DAAEdf6e95b222CD3dE09456ec0a46672C4',
+      100000002: '0xe6774DAAEdf6e95b222CD3dE09456ec0a46672C4',
       5: '0x0e8A920f0338b94828aE84a7C227bC17F3a02f86',
       137: '0x6eB9b34913Bd96CA2695519eD0F8B8752d43FD2b',
       5000: '0x6BBf498C429C51d05bcA3fC67D2C720B15FC73B8',
@@ -413,7 +415,7 @@ export default <HardhatUserConfig>{
     */
       mainnet_live_fork: networkConfig({
         url: networkUrls['mainnet-live-fork'],
-        chainId: 100000001,   // use this custom chain id ! 
+        chainId: 100000002,   // use this custom chain id ! 
         live: true,
   
         saveDeployments: true,
