@@ -10,14 +10,18 @@ const deployFn: DeployFunction = async (hre) => {
         
       ],
 
-        //call init with no args    this works fine 
+        //call init with no args    this works fine (i think ? )
+        initializer : "initialize" , 
       initArgs: [
         
       ],
+ 
+
+       
     }
   )
 
-  
+  // is this ok ? 
   const { protocolOwnerSafe } = await hre.getNamedAccounts()
   hre.log('Transferring ownership of ProtocolPausingManager to Gnosis Safe...')
   await protocolPausingManager.transferOwnership(protocolOwnerSafe)
@@ -39,7 +43,7 @@ deployFn.dependencies = ['teller-v2:deploy' ]
 
 deployFn.skip = async (hre) => {
   return (
-    !hre.network.live || !['localhost', 'polygon'].includes(hre.network.name)
+    !hre.network.live || !['localhost', 'polygon', 'mainnet','mainnet_live_fork'].includes(hre.network.name)
   )
 }
 export default deployFn

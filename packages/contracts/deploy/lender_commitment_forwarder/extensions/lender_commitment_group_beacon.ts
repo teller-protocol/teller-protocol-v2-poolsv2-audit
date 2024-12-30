@@ -35,6 +35,7 @@ const deployFn: DeployFunction = async (hre) => {
   let uniswapV3FactoryAddress: string
   switch (hre.network.name) {
     case 'mainnet':
+    case 'mainnet_live_fork':
     case 'goerli':
     case 'arbitrum':
     case 'optimism':
@@ -66,7 +67,7 @@ const deployFn: DeployFunction = async (hre) => {
         uniswapV3FactoryAddress,
       ],
       libraries: {
-        //make this have only internal calls ? 
+        
         UniswapPricingLibrary: await uniswapPricingLibrary.getAddress(),
       },
       
@@ -95,9 +96,10 @@ deployFn.tags = ['lender-commitment-group-beacon']
 deployFn.dependencies = [
   'teller-v2:deploy',
   'smart-commitment-forwarder:deploy',
+  'teller-v2:uniswap-pricing-library', 
 ]
 
 deployFn.skip = async (hre) => {
-  return !hre.network.live || !['sepolia', 'polygon'].includes(hre.network.name)
+  return !hre.network.live || !['sepolia', 'polygon' , 'mainnet','mainnet_live_fork'].includes(hre.network.name)
 }
 export default deployFn

@@ -1,5 +1,5 @@
 {
-  "address": "0x68Dc57D998c2Eb974476E36aC7DFA88Dd4bA91a5",
+  "address": "0x1E07A8284157ac48D9A8ec21022D591F99fe2a80",
   "abi": [
     {
       "type": "constructor",
@@ -271,28 +271,6 @@
     {
       "type": "event",
       "anonymous": false,
-      "name": "PoolSharesPrepared",
-      "inputs": [
-        {
-          "type": "address",
-          "name": "lender",
-          "indexed": false
-        },
-        {
-          "type": "uint256",
-          "name": "sharesAmount",
-          "indexed": false
-        },
-        {
-          "type": "uint256",
-          "name": "preparedAt",
-          "indexed": false
-        }
-      ]
-    },
-    {
-      "type": "event",
-      "anonymous": false,
       "name": "Unpaused",
       "inputs": [
         {
@@ -303,8 +281,20 @@
       ]
     },
     {
+      "type": "event",
+      "anonymous": false,
+      "name": "WithdrawFromEscrow",
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "amount",
+          "indexed": true
+        }
+      ]
+    },
+    {
       "type": "function",
-      "name": "DEFAULT_WITHDRAWL_DELAY_TIME_SECONDS",
+      "name": "DEFAULT_WITHDRAW_DELAY_TIME_SECONDS",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
@@ -332,7 +322,7 @@
     },
     {
       "type": "function",
-      "name": "MAX_WITHDRAWL_DELAY_TIME",
+      "name": "MAX_WITHDRAW_DELAY_TIME",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
@@ -1206,44 +1196,6 @@
     },
     {
       "type": "function",
-      "name": "poolSharesPreparedTimestamp",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": ""
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256",
-          "name": ""
-        }
-      ]
-    },
-    {
-      "type": "function",
-      "name": "poolSharesPreparedToWithdrawForLender",
-      "constant": true,
-      "stateMutability": "view",
-      "payable": false,
-      "inputs": [
-        {
-          "type": "address",
-          "name": ""
-        }
-      ],
-      "outputs": [
-        {
-          "type": "uint256",
-          "name": ""
-        }
-      ]
-    },
-    {
-      "type": "function",
       "name": "poolSharesToken",
       "constant": true,
       "stateMutability": "view",
@@ -1258,7 +1210,7 @@
     },
     {
       "type": "function",
-      "name": "prepareSharesForWithdraw",
+      "name": "prepareSharesForBurn",
       "constant": false,
       "payable": false,
       "inputs": [
@@ -1336,7 +1288,7 @@
     },
     {
       "type": "function",
-      "name": "setWithdrawlDelayTime",
+      "name": "setWithdrawDelayTime",
       "constant": false,
       "payable": false,
       "inputs": [
@@ -1468,20 +1420,7 @@
     },
     {
       "type": "function",
-      "name": "withdrawFromEscrowVault",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_amount"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "withdrawlDelayTimeSeconds",
+      "name": "withdrawDelayTimeSeconds",
       "constant": true,
       "stateMutability": "view",
       "payable": false,
@@ -1492,9 +1431,22 @@
           "name": ""
         }
       ]
+    },
+    {
+      "type": "function",
+      "name": "withdrawFromEscrowVault",
+      "constant": false,
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": "_amount"
+        }
+      ],
+      "outputs": []
     }
   ],
   "receipt": {},
-  "numDeployments": 3,
-  "implementation": "0x8Fe43B3b6d176aC892b787635c2F29dDa292B024"
+  "numDeployments": 1,
+  "implementation": "0x181C9e2c7666C06bfa2e2934ffc2AAC75650638C"
 }

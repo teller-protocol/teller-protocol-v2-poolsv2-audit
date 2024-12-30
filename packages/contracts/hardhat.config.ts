@@ -98,6 +98,7 @@ const accounts: HardhatNetworkHDAccountsUserConfig = {
 
 type NetworkNames =
   | 'mainnet'
+  | 'mainnet-live-fork'
   | 'polygon'
   | 'arbitrum'
   | 'base'
@@ -115,6 +116,11 @@ const networkUrls: Record<NetworkNames, string> = {
     (ALCHEMY_API_KEY
       ? `https://eth-mainnet.g.alchemy.com/v2/${ALCHEMY_API_KEY}`
       : ''),
+  
+   'mainnet-live-fork':
+      process.env.MAINNET_LIVE_FORK_RPC_URL ??  '',
+
+
   polygon:
     process.env.POLYGON_RPC_URL ??
     (ALCHEMY_API_KEY
@@ -204,6 +210,7 @@ export default <HardhatUserConfig>{
       goerli: process.env.ETHERSCAN_VERIFY_API_KEY,
       mumbai: process.env.POLYGONSCAN_VERIFY_API_KEY,
       'mantle-testnet': process.env.MANTLE_VERIFY_API_KEY ?? 'xyz',
+      'mainnet-live-fork': '',
     },
     customChains: [
       {
@@ -275,7 +282,7 @@ export default <HardhatUserConfig>{
   solidity: {
     compilers: [
       {
-        version: '0.8.9',
+        version: '0.8.11',
         settings: {
           optimizer: {
             enabled: true, // !isTesting, //need this for now due to large size of tellerV2.test
@@ -327,6 +334,8 @@ export default <HardhatUserConfig>{
     protocolOwnerSafe: {
       31337: 7,
       1: '0x9E3bfee4C6b4D28b5113E4786A1D9812eB3D2Db6',
+      100000001: '0x9E3bfee4C6b4D28b5113E4786A1D9812eB3D2Db6',
+      100000002: '0x9E3bfee4C6b4D28b5113E4786A1D9812eB3D2Db6',
       5: '0x0061CA4F1EB8c3FF93Df074061844d3dd4dC0377',
       137: '0xFea0FB908E31567CaB641865212cF76BE824D848',
       5000: '0x4496c03dA72386255Bf4af60b3CCe07787d3dCC2',
@@ -337,6 +346,8 @@ export default <HardhatUserConfig>{
     protocolTimelock: {
       31337: 8,
       1: '0xe6774DAAEdf6e95b222CD3dE09456ec0a46672C4',
+      100000001: '0xe6774DAAEdf6e95b222CD3dE09456ec0a46672C4',
+      100000002: '0xe6774DAAEdf6e95b222CD3dE09456ec0a46672C4',
       5: '0x0e8A920f0338b94828aE84a7C227bC17F3a02f86',
       137: '0x6eB9b34913Bd96CA2695519eD0F8B8752d43FD2b',
       5000: '0x6BBf498C429C51d05bcA3fC67D2C720B15FC73B8',
@@ -385,6 +396,45 @@ export default <HardhatUserConfig>{
         },
       },
     }),
+
+    /*
+    TO PERFORM A MAINNET_LIVE_FORK:  (test upgrades , etc) 
+
+      Create a live fork on Tenderly 
+      Put that RPC url into 'MAINNET_LIVE_FORK_RPC_URL' in .env 
+
+      copy the contents of deploy/mainnet to deploy/mainnet_live_fork 
+      change the .chainid file to contain 100000001 
+
+      Run the command   yarn contracts deploy --network mainnet_live_fork 
+      This will run the deploy scripts on the live fork 
+
+
+
+      NOTE: you MAY need to copy the contents of .openzeppelin/mainnet.json into unknown-100000001.json 
+    */
+      mainnet_live_fork: networkConfig({
+        url: networkUrls['mainnet-live-fork'],
+        chainId: 100000002,   // use this custom chain id ! 
+        live: true,
+  
+        saveDeployments: true,
+
+        
+         forking:  {
+              enabled: true,
+              url: networkUrls['mainnet'],
+              // blockNumber: getLatestDeploymentBlock(HARDHAT_DEPLOY_FORK),
+            }, 
+        
+        /*verify: {
+          etherscan: {
+            apiKey: process.env.ETHERSCAN_VERIFY_API_KEY,
+          },
+        },*/
+      }),
+
+
     polygon: networkConfig({
       url: networkUrls.polygon,
       chainId: 137,

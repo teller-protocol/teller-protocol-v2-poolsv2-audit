@@ -1,5 +1,5 @@
 {
-  "address": "0x9B39b1dF550Db040cd67F52EEE927ab4cd42513b",
+  "address": "0x056dc36Fe0119245E06D22095958E33B0F7e5574",
   "abi": [
     {
       "type": "event",
@@ -120,7 +120,7 @@
       "outputs": [
         {
           "type": "address",
-          "name": "newGroupContract_"
+          "name": ""
         }
       ]
     },
@@ -206,7 +206,7 @@
       "outputs": []
     }
   ],
-  "transactionHash": "0xe35c522dd6bed8443fcfa972b6d6b3bf90c3fb7e0b01155e838309c4ea370594",
+  "transactionHash": "0x2d67df2753a95afbf27bc057007ff0488fc846977dcf6914c6179b7c9eebf74d",
   "receipt": {
     "to": null,
     "from": "0xD9B023522CeCe02251d877bb0EB4f06fDe6F98E6",
@@ -214,5 +214,5 @@
     "blockNumber": null
   },
   "numDeployments": 1,
-  "implementation": "0x4d949322CeBc63ec0e39910Bcb37dDcf98D7bD09"
+  "implementation": "0xa112F4327cFCdD3a86dF6064977B7D4a564c37a1"
 }
