@@ -49,6 +49,16 @@
       ]
     },
     {
+      "type": "error",
+      "name": "SafeERC20FailedOperation",
+      "inputs": [
+        {
+          "type": "address",
+          "name": "token"
+        }
+      ]
+    },
+    {
       "type": "event",
       "anonymous": false,
       "name": "AcceptedBid",
@@ -1810,6 +1820,6 @@
     "status": 1,
     "byzantium": true
   },
-  "numDeployments": 27,
+  "numDeployments": 28,
   "implementation": "0xd177f4b8e348b4c56c2ac8e03b58e41b79351a7f"
 }

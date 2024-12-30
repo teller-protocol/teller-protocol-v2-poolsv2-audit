@@ -35,11 +35,15 @@
   "protocol-pausing-manager:deploy": 1728941512,
   "teller-v2:pausing-manager-upgrade": 1729002281,
   "teller-v2:pausing-manager-upgrade-v2": 1729011159,
-  "lender-commitment-group-beacon:upgrade": 1729179210,  
+  "lender-commitment-group-beacon:upgrade": 1729179210,
   "lender-commitment-group-beacon:upgrade-2": 1730738007,
-  "teller-v2:proto-fee-upgrade": 1730743035, 
+  "teller-v2:proto-fee-upgrade": 1730743035,
   "hypernative-oracle-mock:deploy": 1730841179,
   "smart-commitment-forwarder:upgrade-initializer": 1730922791,
   "lendergroup-mock-interact:deploy": 1730925393,
-  "lender-commitment-group-beacon:upgrade-pooloracle-view": 1731095903
+  "lender-commitment-group-beacon:upgrade-pooloracle-view": 1731095903,
+  "smart-commitment-forwarder:deploy": 1735577042,
+  "lender-commitment-group-beacon:deploy": 1735577072,
+  "lender-commitment-group-factory:deploy": 1735577085,
+  "lender-groups:upgrade": 1735577133
 }
