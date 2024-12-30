@@ -133,13 +133,14 @@ deployFn.tags = [
   'lender-groups',
   'lender-groups:upgrade',
 ]
-deployFn.dependencies = [
-  'lender-commitment-group-factory:deploy',
+deployFn.dependencies = [ 
+  
   'protocol-pausing-manager:deploy',
   'market-registry:deploy',
   'teller-v2:v2-calculations',
   'teller-v2:init',
   'smart-commitment-forwarder:deploy',
+  'lender-commitment-group-factory:deploy',
 ]
 deployFn.skip = async (hre) => {
   return (
