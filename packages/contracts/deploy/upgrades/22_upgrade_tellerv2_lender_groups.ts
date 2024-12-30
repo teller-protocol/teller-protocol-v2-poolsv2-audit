@@ -24,6 +24,20 @@ const deployFn: DeployFunction = async (hre) => {
  
 
 
+
+  var tellerV2Call = {
+            fn: 'setProtocolPausingManager',
+            args: [await protocolPausingManager.getAddress()],
+   };
+
+  //already initialized on polygon 
+  if ([  'polygon' ].includes(hre.network.name) ) {
+    tellerV2Call = undefined ; 
+
+    console.log("  ===== skipping reinitializer for tellerV2 =====");
+  }
+
+
   await hre.upgrades.proposeBatchTimelock({
     title: 'TellerV2 LenderGroups Upgrade',
     description: `
@@ -78,10 +92,7 @@ const deployFn: DeployFunction = async (hre) => {
           ],
           constructorArgs: [await trustedForwarder.getAddress()],
 
-          call: {
-            fn: 'setProtocolPausingManager',
-            args: [await protocolPausingManager.getAddress()],
-          },
+          call:  tellerV2Call ,
         },
       },
       {
@@ -92,29 +103,7 @@ const deployFn: DeployFunction = async (hre) => {
         beacon: collateralEscrowBeacon,
         implFactory: await hre.ethers.getContractFactory('CollateralEscrowV1'),
       },
-     /* {
-        proxy: lenderManager,
-        implFactory: await hre.ethers.getContractFactory('LenderManager'),
-
-        opts: {
-          unsafeAllow: ['constructor', 'state-variable-immutable'],
-          constructorArgs: [await marketRegistry.getAddress()],
-        },
-      },
-      {
-        proxy: lenderCommitmentForwarder,
-        implFactory: await hre.ethers.getContractFactory(
-          'LenderCommitmentForwarder'
-        ),
-
-        opts: {
-          unsafeAllow: ['constructor', 'state-variable-immutable'],
-          constructorArgs: [
-            await tellerV2.getAddress(),
-            await marketRegistry.getAddress(),
-          ],
-        },
-      },*/
+     
     ],
   })
 
