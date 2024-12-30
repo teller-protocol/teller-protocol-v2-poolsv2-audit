@@ -45,5 +45,5 @@
   "smart-commitment-forwarder:deploy": 1735577042,
   "lender-commitment-group-beacon:deploy": 1735577072,
   "lender-commitment-group-factory:deploy": 1735577085,
-  "lender-groups:upgrade": 1735579495
+  "lender-groups:upgrade": 1735581188
 }
