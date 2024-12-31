@@ -91,10 +91,14 @@ Object.keys(exportData).forEach(key => {
 
     if ( Array.isArray( nonDeployedContracts[key] ) ){
     nonDeployedContracts[key].forEach(contractFilePath => {
-       const contractName = contractFilePath.split("/").pop().replace(".sol", "");
+      
       const abiPath = path.join(artifactsDir,  contractFilePath );
 
-    
+      
+       const contractName = contractFilePath.split("/").pop().replace(".json", "");
+
+       
+
 
       if (fs.existsSync(abiPath)) {
         const abiData = JSON.parse(fs.readFileSync(abiPath, "utf-8"));
