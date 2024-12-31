@@ -58,11 +58,25 @@ shell.ls("-A", typechainSrc).forEach(item => {
 
 
 
+//can inject just the ABIs ..
+const nonDeployedContracts = {
 
-const nonDeployedContracts = { "137" : [
+ "1" : [
   "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroupShares.sol/LenderCommitmentGroupShares.json",
   "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroup_Smart.sol/LenderCommitmentGroup_Smart.json",
-] };
+] ,
+
+
+ "137" : [
+  "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroupShares.sol/LenderCommitmentGroupShares.json",
+  "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroup_Smart.sol/LenderCommitmentGroup_Smart.json",
+] ,
+
+  "8453" : [
+     "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroupShares.sol/LenderCommitmentGroupShares.json",
+  "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroup_Smart.sol/LenderCommitmentGroup_Smart.json",
+    ]
+};
 
 
 // Step 4: Export contract deployments
@@ -97,7 +111,7 @@ Object.keys(exportData).forEach(key => {
       
        const contractName = contractFilePath.split("/").pop().replace(".json", "");
 
-       
+
 
 
       if (fs.existsSync(abiPath)) {
