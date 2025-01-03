@@ -74,6 +74,8 @@ deployFn.tags = [
 ]
 deployFn.dependencies = ['teller-v2:deploy','protocol-pausing-manager:deploy']
 deployFn.skip = async (hre) => {
+
+    //only had to do this on polygon once 
   return !hre.network.live || !['goerli', 'polygon'].includes(hre.network.name)
 }
 export default deployFn

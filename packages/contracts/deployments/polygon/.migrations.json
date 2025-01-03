@@ -43,8 +43,7 @@
   "lendergroup-mock-interact:deploy": 1730925393,
   "lender-commitment-group-beacon:upgrade-pooloracle-view": 1731095903,
   "smart-commitment-forwarder:deploy": 1735577042,
-  "lender-commitment-group-beacon:deploy": 1735577072,
-  "lender-commitment-group-factory:deploy": 1735577085,
+
   "lender-groups:upgrade": 1735581188,
   "teller-v2:gas-require-upgrade": 1735678400
 }

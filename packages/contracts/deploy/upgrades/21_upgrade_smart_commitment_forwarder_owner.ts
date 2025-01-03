@@ -57,6 +57,7 @@ deployFn.tags = ['proposal', 'upgrade', 'smart-commitment-forwarder-upgrade-init
 deployFn.dependencies = ['smart-commitment-forwarder:deploy']
 deployFn.skip = async (hre) => {
   
+  //only had to do this on polygon once 
   return !hre.network.live || !['sepolia','polygon' ].includes(hre.network.name)
 }
 export default deployFn
