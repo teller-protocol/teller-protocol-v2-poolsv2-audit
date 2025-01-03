@@ -1,5 +1,5 @@
 {
-  "address": "0x1E07A8284157ac48D9A8ec21022D591F99fe2a80",
+  "address": "0xa8F8A812083Ffa98e361Eb7F23109f7093c6f859",
   "abi": [
     {
       "type": "constructor",
@@ -494,6 +494,25 @@
     },
     {
       "type": "function",
+      "name": "activeBidsAmountDueRemaining",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
       "name": "addPrincipalToCommitmentGroup",
       "constant": false,
       "payable": false,
@@ -606,6 +625,20 @@
       "outputs": [
         {
           "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "excessivePrincipalTokensRepaid",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256",
           "name": ""
         }
       ]
@@ -1448,5 +1481,5 @@
   ],
   "receipt": {},
   "numDeployments": 1,
-  "implementation": "0x181C9e2c7666C06bfa2e2934ffc2AAC75650638C"
+  "implementation": "0x907c21dC9dCf74e21Da64CE3FC75f14CCa5Ed0Cc"
 }
