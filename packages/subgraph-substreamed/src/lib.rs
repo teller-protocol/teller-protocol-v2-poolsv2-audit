@@ -26,7 +26,7 @@ use substreams::scalar::BigDecimal;
 
 substreams_ethereum::init!();
 
-const FACTORY_TRACKED_CONTRACT: [u8; 20] = hex!("056dc36Fe0119245E06D22095958E33B0F7e5574");
+const FACTORY_TRACKED_CONTRACT: [u8; 20] = hex!("2fF5ea5CF5061EB0fcfB7A2AafB8CCC79f3F73ea");
 const COLLATERAL_MANAGER_TRACKED_CONTRACT: [u8;20] = hex!("76888a882a4fF57455B5e74B791DD19DF3ba51Bb");
 
 fn map_factory_events(blk: &eth::Block, events: &mut contract::Events) {
