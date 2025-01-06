@@ -1,12 +1,7 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.7.0) (security/Pausable.sol)
 
 pragma solidity ^0.8.0;
 
- 
- 
-//import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
- 
 
 import "../interfaces/IHasProtocolPausingManager.sol";
 
@@ -19,8 +14,8 @@ abstract contract HasProtocolPausingManager
     {
   
 
-        //Both the bool and the address together take one storage slot 
-    bool private __paused;// .. Deprecated , handled by pausing manager now
+    //Both this bool and the address together take one storage slot 
+    bool private __paused;// Deprecated. handled by pausing manager now
 
     address private _protocolPausingManager; // 20 bytes, gap will start at new slot 
   

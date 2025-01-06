@@ -51,7 +51,7 @@ const deployFn: DeployFunction = async (hre) => {
 
   hre.log( " ------- "  )
   hre.log( "tellerV2PausingManager: "  )
-  hre.log(  scfOwner  )
+  hre.log(  tellerV2PausingManager  )
   hre.log( " ------- "  )
  
 

@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v4.7.0) (security/Pausable.sol)
 
 pragma solidity ^0.8.0;
-
 
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
@@ -11,34 +9,19 @@ import "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol";
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
-
-
 import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
-
 
 
 import "../interfaces/IProtocolPausingManager.sol";
 
-
 import "../interfaces/IPausableTimestamp.sol";
 
-/**
  
- TODO:
-
- Move SCF pausing into here ??
-
-
- */
 contract ProtocolPausingManager is ContextUpgradeable, OwnableUpgradeable, IProtocolPausingManager , IPausableTimestamp{
     using MathUpgradeable for uint256;
 
     bool private _protocolPaused; 
     bool private _liquidationsPaused; 
-    //bool private _liquidityPoolsPaused;    
-
-
-    // u8 private _currentPauseState;  //use an enum !!! 
 
     mapping(address => bool) public  pauserRoleBearer;
 
@@ -63,7 +46,6 @@ contract ProtocolPausingManager is ContextUpgradeable, OwnableUpgradeable, IProt
 
 
     //need to initialize so owner is owner (transfer ownership to safe)
-
     function initialize(
         
     ) external initializer {
@@ -81,23 +63,11 @@ contract ProtocolPausingManager is ContextUpgradeable, OwnableUpgradeable, IProt
     }
 
 
-      function liquidationsPaused() public view virtual returns (bool) {
+    function liquidationsPaused() public view virtual returns (bool) {
         return _liquidationsPaused;
     }
 
    
-   /*
-    function _requireNotPaused() internal view virtual {
-        require(!paused(), "Pausable: paused");
-    }
-
-         function _requirePaused() internal view virtual {
-        require(paused(), "Pausable: not paused");
-    }
-    */
-   
-
-
 
 
     function pauseProtocol() public virtual onlyPauser {
@@ -153,7 +123,6 @@ contract ProtocolPausingManager is ContextUpgradeable, OwnableUpgradeable, IProt
 
 
     // Role Management 
-
 
     function addPauser(address _pauser) public virtual onlyOwner   {
        pauserRoleBearer[_pauser] = true;
