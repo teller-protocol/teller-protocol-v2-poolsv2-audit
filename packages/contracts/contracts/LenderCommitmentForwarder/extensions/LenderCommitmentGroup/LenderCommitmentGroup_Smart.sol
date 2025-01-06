@@ -16,7 +16,6 @@ import "../../../interfaces/IProtocolFee.sol";
  
 import "../../../interfaces/ITellerV2.sol";
 
-//import "../../../interfaces/IFlashRolloverLoan.sol";
 import "../../../libraries/NumbersLib.sol";
 
 import "../../../interfaces/uniswap/IUniswapV3Pool.sol";
@@ -63,6 +62,9 @@ import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+
+
+
 /*
  
 
@@ -75,8 +77,6 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
  If the borrower defaults on a loan, for 24 hours a liquidation auction is automatically conducted by this smart contract in order to incentivize a liquidator to take the collateral tokens in exchange for principal tokens.
 
-  
- 
 
 */
 
@@ -89,7 +89,7 @@ contract LenderCommitmentGroup_Smart is
     OracleProtectedChild,
     OwnableUpgradeable,
     PausableUpgradeable,
-    ReentrancyGuardUpgradeable  //adds many storage slots so breaks upgradeability 
+    ReentrancyGuardUpgradeable 
 {
     using AddressUpgradeable for address;
     using NumbersLib for uint256;
@@ -108,13 +108,12 @@ contract LenderCommitmentGroup_Smart is
     address public immutable TELLER_V2;
     address public immutable SMART_COMMITMENT_FORWARDER;
     address public immutable UNISWAP_V3_FACTORY;
-    //address private __UNISWAP_V3_POOL; //deprecated
+    
  
     LenderCommitmentGroupShares public poolSharesToken;
 
     IERC20 public principalToken;
     IERC20 public collateralToken;
-    //uint24 private __uniswapPoolFee; //deprecated
 
     uint256 marketId;
 
@@ -131,7 +130,6 @@ contract LenderCommitmentGroup_Smart is
     uint16 public liquidityThresholdPercent; //max ratio of principal allowed to be borrowed vs escrowed  //  maximum of 10000 (100%)
     uint16 public collateralRatio; //the overcollateralization ratio, typically >100 pct
 
-    //uint32 private __twapInterval; //deprecated
     uint32 public maxLoanDuration;
     uint16 public interestRateLowerBound;
     uint16 public interestRateUpperBound;
@@ -142,12 +140,9 @@ contract LenderCommitmentGroup_Smart is
     uint256 immutable public DEFAULT_WITHDRAW_DELAY_TIME_SECONDS = 300;
     uint256 immutable public MAX_WITHDRAW_DELAY_TIME = 86400;
 
-    //mapping(address => uint256) public principalTokensCommittedByLender;
     mapping(uint256 => bool) public activeBids;
     mapping(uint256 => uint256) public activeBidsAmountDueRemaining;
 
-    //this excludes interest
-    // maybe it is possible to get rid of this storage slot and calculate it from totalPrincipalTokensRepaid, totalPrincipalTokensLended
     int256 tokenDifferenceFromLiquidations;
 
     bool public firstDepositMade;
@@ -171,8 +166,6 @@ contract LenderCommitmentGroup_Smart is
         uint16 interestRateUpperBound,
         uint16 liquidityThresholdPercent,
         uint16 loanToValuePercent,
-      //  uint24 uniswapPoolFee,
-      //  uint32 twapInterval,
         address poolSharesToken
     );
 
@@ -437,12 +430,11 @@ contract LenderCommitmentGroup_Smart is
     {
        
          int256 poolTotalEstimatedValueSigned = int256(totalPrincipalTokensCommitted) 
-         //+ int256( totalPrincipalTokensRepaid )   //cant really incorporate because needs totalPrincipalTokensLended to help balance it 
-          
+                  
          + int256(totalInterestCollected)  + int256(tokenDifferenceFromLiquidations) 
          + int256( excessivePrincipalTokensRepaid )
          - int256( totalPrincipalTokensWithdrawn )
-         //- int256( totalPrincipalTokensLended )  //amount borrowed -- should not be incorporated as it does not really affect net value 
+         
          ;
 
 
@@ -565,7 +557,7 @@ contract LenderCommitmentGroup_Smart is
  
         principalToken.safeApprove(address(TELLER_V2), _principalAmount);
 
-        //do not have to override msg.sender as this contract is the lender !
+        //do not have to override msg.sender here as this contract is the lender !
         _acceptBidWithRepaymentListener(_bidId);
 
         totalPrincipalTokensLended += _principalAmount;
@@ -627,9 +619,7 @@ contract LenderCommitmentGroup_Smart is
     ) external whenForwarderNotPaused whenNotPaused  nonReentrant onlyOracleApprovedAllowEOA 
     returns (uint256) {
        
-        //require(poolSharesPreparedToWithdrawForLender[msg.sender] >= _amountPoolSharesTokens,"Shares not prepared for withdraw");
-       // require(poolSharesPreparedTimestamp[msg.sender] <= block.timestamp - withdrawlDelayTimeSeconds,"Shares not prepared for withdraw");
-         
+          
        
         //this should compute BEFORE shares burn 
         uint256 principalTokenValueToWithdraw = _valueOfUnderlying(
@@ -670,14 +660,12 @@ contract LenderCommitmentGroup_Smart is
         int256 _tokenAmountDifference
     ) external whenForwarderNotPaused whenNotPaused bidIsActiveForGroup(_bidId) nonReentrant onlyOracleApprovedAllowEOA {
         
-        //use original principal amount as amountDue
+
 
         uint256 loanTotalPrincipalAmount = _getLoanTotalPrincipalAmount(_bidId);  //only used for the auction delta amount 
         
         (uint256 principalDue,uint256 interestDue) = _getAmountOwedForBid(_bidId);  //this is the base amount that must be repaid by the liquidator
-        
-      //  uint256 principalAmountAlreadyRepaid = loanTotalPrincipalAmount - principalDue;
-        
+                
 
         uint256 loanDefaultedTimeStamp = ITellerV2(TELLER_V2)
             .getLoanDefaultTimestamp(_bidId);
@@ -731,7 +719,7 @@ contract LenderCommitmentGroup_Smart is
 
             totalPrincipalTokensRepaid += principalDue;
 
-         //   tokenDifferenceFromLiquidations += int256(principalAmountAlreadyRepaid); //this helps us more correctly calculate the shortfall
+         
             tokenDifferenceFromLiquidations += int256(tokensToTakeFromSender - liquidationProtocolFee );
 
 
@@ -742,7 +730,7 @@ contract LenderCommitmentGroup_Smart is
 
              
         
-               //dont stipend/refund more than principalDue base 
+            //dont stipend/refund more than principalDue base 
             if (tokensToGiveToSender > principalDue) {
                 tokensToGiveToSender = principalDue;
             }
@@ -760,23 +748,13 @@ contract LenderCommitmentGroup_Smart is
 
             totalPrincipalTokensRepaid += principalDue;
 
-            //this will make tokenDifference go more negative
-
-            //this is the shortfall 
-          //  tokenDifferenceFromLiquidations += int256(principalAmountAlreadyRepaid);//this helps us more correctly calculate the shortfall
-            // tokenDifferenceFromLiquidations -= int256(tokensToGiveToSender);
-
-           //  uint256 shortfallNet = principalDue < tokensToGiveToSender ? tokensToGiveToSender - principalDue  : 0;
-
-              tokenDifferenceFromLiquidations -= int256(tokensToGiveToSender);
+            tokenDifferenceFromLiquidations -= int256(tokensToGiveToSender);
  
 
            
         }
 
-        //this will effectively 'forfeit' tokens from this contract equal to ... the amount (principal) that has not been repaid ! principalDue
-
-
+        //this will effectively 'forfeit' tokens from this contract equal to the amount (principal) that has not been repaid ! principalDue
         //this will give collateral to the caller
         ITellerV2(TELLER_V2).lenderCloseLoanWithRecipient(_bidId, msg.sender);
     
@@ -1019,7 +997,7 @@ contract LenderCommitmentGroup_Smart is
 
 
     /*
-        If principaltokens get stuck in the escrow vault for any reason, anyone may
+        If principal get stuck in the escrow vault for any reason, anyone may
         call this function to move them from that vault in to this contract 
 
         @dev there is no need to increment totalPrincipalTokensRepaid here as that is accomplished by the repayLoanCallback
@@ -1076,7 +1054,7 @@ contract LenderCommitmentGroup_Smart is
     }
 
 
- function getPoolUtilizationRatio(uint256 activeLoansAmountDelta ) public view returns (uint16) {
+    function getPoolUtilizationRatio(uint256 activeLoansAmountDelta ) public view returns (uint16) {
 
         if (getPoolTotalEstimatedValue() == 0) {
             return 0;
@@ -1091,7 +1069,7 @@ contract LenderCommitmentGroup_Smart is
 
     }
 
-  function getMinInterestRate(uint256 amountDelta) public view returns (uint16) {
+    function getMinInterestRate(uint256 amountDelta) public view returns (uint16) {
         return interestRateLowerBound + 
         uint16( uint256(interestRateUpperBound-interestRateLowerBound)
         .percent(getPoolUtilizationRatio(amountDelta )
@@ -1112,8 +1090,8 @@ contract LenderCommitmentGroup_Smart is
         returns (uint256)
     {     
 
-            return  ( uint256( getPoolTotalEstimatedValue() )).percent(liquidityThresholdPercent) -
-            getTotalPrincipalTokensOutstandingInActiveLoans();
+        return  ( uint256( getPoolTotalEstimatedValue() )).percent(liquidityThresholdPercent) -
+        getTotalPrincipalTokensOutstandingInActiveLoans();
      
     }
 
