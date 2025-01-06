@@ -47,5 +47,5 @@
   "teller-v2:gas-require-upgrade": 1735678400,
   "lender-commitment-group-beacon:deploy": 1735927754,
   "lender-commitment-group-factory:deploy": 1735927765,
-  "validate-deployments": 1736183936
+  "validate-deployments": 1736184844
 }

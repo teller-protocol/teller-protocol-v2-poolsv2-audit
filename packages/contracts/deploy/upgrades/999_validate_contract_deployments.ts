@@ -12,7 +12,17 @@ const deployFn: DeployFunction = async (hre) => {
  
   const marketRegistry = await hre.contracts.get('MarketRegistry')
 
+  	
+
   
+  const pausingManager = await hre.contracts.get(
+    'ProtocolPausingManager'
+  )
+  
+  const lenderGroupsFactory = await hre.contracts.get(
+    'LenderCommitmentGroupFactory'
+  )
+
   const smartCommitmentForwarder = await hre.contracts.get(
     'SmartCommitmentForwarder'
   )
@@ -41,6 +51,43 @@ const deployFn: DeployFunction = async (hre) => {
 
 
 
+
+
+  const lenderGroupsFactoryOwner = await lenderGroupsFactory.owner()
+
+  if (lenderGroupsFactoryOwner == zeroAddress) {
+  	throw "Validation Error : lenderGroupsFactoryOwner not defined " 
+  }
+
+
+
+  hre.log( " ------- "  )
+  hre.log( "lenderGroupsFactoryOwner: "  )
+  hre.log(  lenderGroupsFactoryOwner  )
+  hre.log( " ------- "  )
+ 
+
+
+
+
+
+  const tellerV2Owner = await tellerV2.owner()
+
+  if (tellerV2Owner == zeroAddress) {
+  	throw "Validation Error : Teller Owner not defined " 
+  }
+
+
+
+  hre.log( " ------- "  )
+  hre.log( "tellerV2Owner: "  )
+  hre.log(  tellerV2Owner  )
+  hre.log( " ------- "  )
+ 
+
+
+
+
   const tellerV2PausingManager = await tellerV2.getProtocolPausingManager()
 
   if (tellerV2PausingManager == zeroAddress) {
@@ -56,39 +103,23 @@ const deployFn: DeployFunction = async (hre) => {
  
 
 
-  
-/*
-  await hre.upgrades.proposeBatchTimelock({
-    title: 'Smart Commitment Forwarder: Upgrade Oracle Logic 2',
-    description: ` 
-# Smart Commitment Forwarder
-* Modifies Smart Commitment Forwarder to change oracle security logic.
-`,
-    _steps: [
-      {
-        proxy: smartCommitmentForwarder,
-        implFactory: await hre.ethers.getContractFactory(
-          'SmartCommitmentForwarder'
-        ),
-
-        opts: {
-          unsafeAllow: ['constructor', 'state-variable-immutable'],
-          // unsafeAllowRenames: true,
-          // unsafeSkipStorageCheck: true, //caution !
-          constructorArgs: [
-            await tellerV2.getAddress(),
-            await marketRegistry.getAddress(),
-          ],
-            initializer : "initialize" 
-
-         
-           
-        },
-      },
-    ],
-  })*/
 
 
+
+  const pausingManagerOwner = await pausingManager.owner()
+
+  if (pausingManagerOwner == zeroAddress) {
+  	throw "Validation Error :  Pausing Manager Owner not defined " 
+  }
+
+
+
+  hre.log( " ------- "  )
+  hre.log( "pausingManagerOwner: "  )
+  hre.log(  pausingManagerOwner  )
+  hre.log( " ------- "  )
+ 
+ 
 
 
   hre.log(' ---  DEPLOYMENT VALIDATIONS FINISHED ---  ')
@@ -100,11 +131,10 @@ const deployFn: DeployFunction = async (hre) => {
 // tags and deployment
 deployFn.id = 'validate-deployments'
 deployFn.tags = ['proposal', 'upgrade', 'validate-deployments']
-deployFn.dependencies = ['smart-commitment-forwarder:deploy']
+deployFn.dependencies = ['lender-groups:upgrade']
 deployFn.skip = async (hre) => {
-  
-  //only had to do this on polygon once 
-  return !hre.network.live || !['sepolia','polygon' ].includes(hre.network.name)
+   
+  return !hre.network.live || !['sepolia','polygon','base','arbitrum','mainnet' ].includes(hre.network.name)
 }
 export default deployFn
 
