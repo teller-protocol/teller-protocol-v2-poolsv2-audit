@@ -1107,64 +1107,6 @@
     },
     {
       "type": "function",
-      "name": "revokeBorrower",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_marketId"
-        },
-        {
-          "type": "address",
-          "name": "_borrowerAddress"
-        },
-        {
-          "type": "uint8",
-          "name": "_v"
-        },
-        {
-          "type": "bytes32",
-          "name": "_r"
-        },
-        {
-          "type": "bytes32",
-          "name": "_s"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
-      "name": "revokeLender",
-      "constant": false,
-      "payable": false,
-      "inputs": [
-        {
-          "type": "uint256",
-          "name": "_marketId"
-        },
-        {
-          "type": "address",
-          "name": "_lenderAddress"
-        },
-        {
-          "type": "uint8",
-          "name": "_v"
-        },
-        {
-          "type": "bytes32",
-          "name": "_r"
-        },
-        {
-          "type": "bytes32",
-          "name": "_s"
-        }
-      ],
-      "outputs": []
-    },
-    {
-      "type": "function",
       "name": "revokeLender",
       "constant": false,
       "payable": false,

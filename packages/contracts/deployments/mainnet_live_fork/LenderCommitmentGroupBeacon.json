@@ -494,6 +494,25 @@
     },
     {
       "type": "function",
+      "name": "activeBidsAmountDueRemaining",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ],
+      "outputs": [
+        {
+          "type": "uint256",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
       "name": "addPrincipalToCommitmentGroup",
       "constant": false,
       "payable": false,
@@ -606,6 +625,20 @@
       "outputs": [
         {
           "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
+      "name": "excessivePrincipalTokensRepaid",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [],
+      "outputs": [
+        {
+          "type": "uint256",
           "name": ""
         }
       ]

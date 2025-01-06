@@ -403,8 +403,9 @@ export default <HardhatUserConfig>{
       Create a live fork on Tenderly 
       Put that RPC url into 'MAINNET_LIVE_FORK_RPC_URL' in .env 
 
-      copy the contents of deploy/mainnet to deploy/mainnet_live_fork 
-      change the .chainid file to contain 100000001 
+      copy the contents of deployments/mainnet to deployments/mainnet_live_fork 
+      copy the contents of .openzeppelin/mainnet to unknown-100000002
+      change the .chainid file to contain 100000002
 
       Run the command   yarn contracts deploy --network mainnet_live_fork 
       This will run the deploy scripts on the live fork 

@@ -26,9 +26,9 @@
   "lender-commitment-forwarder:extensions:flash-rollover-widget:deploy": 1724347441,
   "lender-commitment-forwarder:extensions:loan-referral-forwarder:deploy": 1724347466,
   "lender-commitment-forwarder:alpha:upgrade_referrals": 1724423884,
-  "smart-commitment-forwarder:deploy": 1734111171,
-  "lender-commitment-group-beacon:deploy": 1734111183,
-  "lender-commitment-group-factory:deploy": 1734111192,
-  "protocol-pausing-manager:deploy": 1734111204,
-  "lender-groups:upgrade": 1734111231
+  "smart-commitment-forwarder:deploy": 1736185531,
+  "lender-commitment-group-beacon:deploy": 1736185543,
+  "lender-commitment-group-factory:deploy": 1736185556,
+  "protocol-pausing-manager:deploy": 1736185572,
+  "lender-groups:upgrade": 1736185595
 }

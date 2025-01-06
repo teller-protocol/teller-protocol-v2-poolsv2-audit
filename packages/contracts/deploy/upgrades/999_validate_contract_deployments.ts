@@ -8,6 +8,9 @@ const deployFn: DeployFunction = async (hre) => {
   hre.log('')
   hre.log('  --- RUNNING DEPLOYMENT VALIDATIONS ---  ')
 
+
+
+
   const tellerV2 = await hre.contracts.get('TellerV2')
  
   const marketRegistry = await hre.contracts.get('MarketRegistry')
@@ -21,6 +24,11 @@ const deployFn: DeployFunction = async (hre) => {
   
   const lenderGroupsFactory = await hre.contracts.get(
     'LenderCommitmentGroupFactory'
+  )
+
+
+  const lenderGroupsBeacon = await hre.contracts.get(
+    'LenderCommitmentGroupBeacon'
   )
 
   const smartCommitmentForwarder = await hre.contracts.get(
@@ -39,25 +47,21 @@ const deployFn: DeployFunction = async (hre) => {
 
   const scfOwner = await smartCommitmentForwarder.owner()
 
-  if (scfOwner == zeroAddress) {
-  	throw "Validation Error : SCF owner not defined " 
-  }
   
   hre.log( " ------- "  )
   hre.log( "SCF owner: "  )
   hre.log(  scfOwner  )
   hre.log( " ------- "  )
  
+  if (scfOwner == zeroAddress) {
+  	throw "Validation Error : SCF owner not defined " 
+  }
 
 
 
 
 
   const lenderGroupsFactoryOwner = await lenderGroupsFactory.owner()
-
-  if (lenderGroupsFactoryOwner == zeroAddress) {
-  	throw "Validation Error : lenderGroupsFactoryOwner not defined " 
-  }
 
 
 
@@ -66,16 +70,32 @@ const deployFn: DeployFunction = async (hre) => {
   hre.log(  lenderGroupsFactoryOwner  )
   hre.log( " ------- "  )
  
+  if (lenderGroupsFactoryOwner == zeroAddress) {
+  	throw "Validation Error : lenderGroupsFactoryOwner not defined " 
+  }
+
+ 
+
+  const lenderGroupsBeaconOwner = await lenderGroupsBeacon.owner()
+
+ 
+  hre.log( " ------- "  )
+  hre.log( "lenderGroupsBeaconOwner: "  )
+  hre.log(  lenderGroupsBeaconOwner  )
+  hre.log( " ------- "  )
+ 
+  if (lenderGroupsBeaconOwner == zeroAddress) {
+  	throw "Validation Error : lenderGroupsBeaconOwner not defined " 
+  }
+
+
+
 
 
 
 
 
   const tellerV2Owner = await tellerV2.owner()
-
-  if (tellerV2Owner == zeroAddress) {
-  	throw "Validation Error : Teller Owner not defined " 
-  }
 
 
 
@@ -84,33 +104,17 @@ const deployFn: DeployFunction = async (hre) => {
   hre.log(  tellerV2Owner  )
   hre.log( " ------- "  )
  
-
-
-
-
-  const tellerV2PausingManager = await tellerV2.getProtocolPausingManager()
-
-  if (tellerV2PausingManager == zeroAddress) {
-  	throw "Validation Error : Teller Protocol Pausing Manager not defined " 
+  if (tellerV2Owner == zeroAddress) { 
+  		throw new Error("Validation Error : Teller Owner not defined ")
   }
 
 
-
-  hre.log( " ------- "  )
-  hre.log( "tellerV2PausingManager: "  )
-  hre.log(  tellerV2PausingManager  )
-  hre.log( " ------- "  )
- 
 
 
 
 
 
   const pausingManagerOwner = await pausingManager.owner()
-
-  if (pausingManagerOwner == zeroAddress) {
-  	throw "Validation Error :  Pausing Manager Owner not defined " 
-  }
 
 
 
@@ -119,7 +123,36 @@ const deployFn: DeployFunction = async (hre) => {
   hre.log(  pausingManagerOwner  )
   hre.log( " ------- "  )
  
+  if (pausingManagerOwner == zeroAddress) {
+  	 console.error('Validation Error :  Pausing Manager Owner not defined  ');
+  	  	throw new Error("Validation Error :  Pausing Manager Owner not defined ")
+  }
+
  
+
+
+try {
+  const tellerV2PausingManager = await tellerV2.getProtocolPausingManager()
+ } catch (error) {
+  console.error('Error calling getProtocolPausingManager:', error);
+  throw new Error('Validation Error: Unable to fetch Protocol Pausing Manager');
+}
+
+
+
+  hre.log( " ------- "  )
+  hre.log( "tellerV2PausingManager: "  )
+  hre.log(  tellerV2PausingManager  )
+  hre.log( " ------- "  )
+ 
+  if (tellerV2PausingManager == zeroAddress) {
+    console.error(' Validation Error : Teller Protocol Pausing Manager not defined ');
+  	throw new Error("Validation Error : Teller Protocol Pausing Manager not defined ") 
+  }
+
+
+
+
 
 
   hre.log(' ---  DEPLOYMENT VALIDATIONS FINISHED ---  ')
@@ -133,8 +166,8 @@ deployFn.id = 'validate-deployments'
 deployFn.tags = ['proposal', 'upgrade', 'validate-deployments']
 deployFn.dependencies = ['lender-groups:upgrade']
 deployFn.skip = async (hre) => {
-   
-  return !hre.network.live || !['sepolia','polygon','base','arbitrum','mainnet' ].includes(hre.network.name)
+   return false 
+  //return !hre.network.live || !['sepolia','polygon','base','arbitrum','mainnet' ].includes(hre.network.name)
 }
 export default deployFn
 
