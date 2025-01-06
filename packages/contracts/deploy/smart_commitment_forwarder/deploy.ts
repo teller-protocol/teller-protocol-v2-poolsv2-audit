@@ -15,7 +15,7 @@ const deployFn: DeployFunction = async (hre) => {
       initializer : "initialize" 
     }
   )
-  //how is initializer called ??
+  
 
   return true
 }

@@ -35,7 +35,8 @@ const deployFn: DeployFunction = async (hre) => {
           constructorArgs: [
             await tellerV2.getAddress(),
             await marketRegistry.getAddress(),
-          ]
+          ],
+            initializer : "initialize" 
 
          
            
