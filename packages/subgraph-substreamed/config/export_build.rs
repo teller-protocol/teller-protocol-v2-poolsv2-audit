@@ -20,7 +20,7 @@ impl Default for Data {
 		Self {
 			graph_network: "arbitrum".to_string(),  //polygon
 			chain_network: "arbitrum".to_string(),   // matic 
-			start_block:  66108200    // 66108200 on polygon 
+			start_block:  292978933     // 66108200 on polygon 
 		}
 
 	}

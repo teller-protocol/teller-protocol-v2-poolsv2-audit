@@ -39,7 +39,10 @@ substreams pack ./substreams.yaml
 
 #### DEPLOYING 
 
-62350000
+
+
+make sure FACTORY_TRACKED_CONTRACT in 'lib'  is defined properly for network 
+make sure data in export_build.rs is defined properly for network 
 
 
 cargo run --bin exportbuild   //regenerate yaml files 
@@ -47,9 +50,23 @@ make && make build && make pack
 
 
 graph auth --studio  
- graph deploy --studio tellerv2-lender-groups-polygon --version-label 0.4.21.120
+ graph deploy --studio tellerv2-lender-groups-arbitrum --version-label 0.4.21.120
  
  0.4.21.120
+
+
+
+
+
+### graph names 
+
+tellerv2-lender-groups-polygon  *
+tellerv2-lender-groups-arbitrum 
+tellerv2-lender-groups-base 
+tellerv2-lender-groups-mainnet 
+
+
+
 
 
 
