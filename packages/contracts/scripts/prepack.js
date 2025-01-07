@@ -65,12 +65,19 @@ const nonDeployedContracts = {
   "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroupShares.sol/LenderCommitmentGroupShares.json",
   "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroup_Smart.sol/LenderCommitmentGroup_Smart.json",
 ] ,
-
+ 
 
  "137" : [
   "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroupShares.sol/LenderCommitmentGroupShares.json",
   "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroup_Smart.sol/LenderCommitmentGroup_Smart.json",
 ] ,
+
+
+ "42161" : [
+  "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroupShares.sol/LenderCommitmentGroupShares.json",
+  "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroup_Smart.sol/LenderCommitmentGroup_Smart.json",
+] ,
+
 
   "8453" : [
      "LenderCommitmentForwarder/extensions/LenderCommitmentGroup/LenderCommitmentGroupShares.sol/LenderCommitmentGroupShares.json",
