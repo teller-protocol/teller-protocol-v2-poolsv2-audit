@@ -94,10 +94,7 @@ const deployFn: DeployFunction = async (hre) => {
   }
 
 
-
-
-
-
+ 
 
 
   const tellerV2Owner = await tellerV2.owner()
@@ -114,6 +111,24 @@ const deployFn: DeployFunction = async (hre) => {
   }
 
 
+
+
+
+
+  const tellerV2EscrowVault = await tellerV2.getEscrowVault()
+
+
+
+  hre.log( " ------- "  )
+  hre.log( "tellerV2EscrowVault: "  )
+  hre.log(  tellerV2EscrowVault  )
+  hre.log( " ------- "  )
+ 
+  if (tellerV2EscrowVault == zeroAddress) { 
+      throw new Error("Validation Error : tellerV2EscrowVault not defined ")
+  }
+
+ 
 
 
 
@@ -138,10 +153,7 @@ const deployFn: DeployFunction = async (hre) => {
 
 try {
   const tellerV2PausingManager = await tellerV2.getProtocolPausingManager()
- } catch (error) {
-  console.error('Error calling getProtocolPausingManager:', error);
-  throw new Error('Validation Error: Unable to fetch Protocol Pausing Manager');
-}
+
 
 
 
@@ -150,12 +162,22 @@ try {
   hre.log(  tellerV2PausingManager  )
   hre.log( " ------- "  )
  
+
+
   if (tellerV2PausingManager == zeroAddress) {
     console.error(' Validation Error : Teller Protocol Pausing Manager not defined ');
-  	throw new Error("Validation Error : Teller Protocol Pausing Manager not defined ") 
+    throw new Error("Validation Error : Teller Protocol Pausing Manager not defined ") 
   }
 
 
+
+
+
+  
+ } catch (error) {
+  console.error('Error calling getProtocolPausingManager:', error);
+  throw new Error('Validation Error: Unable to fetch Protocol Pausing Manager');
+}
 
 
 

@@ -32,5 +32,6 @@
   "protocol-pausing-manager:deploy": 1736265876,
   "hypernative-oracle-mock:deploy": 1736266019,
   "lender-commitment-forwarder:alpha:upgrade_max_principal": 1736266028,
-  "lender-groups:upgrade": 1736266039
+  "lender-groups:upgrade": 1736266039,
+  "validate-deployments": 1736279726
 }
