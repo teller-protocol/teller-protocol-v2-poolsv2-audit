@@ -54,7 +54,7 @@ modules:
     output:
       type: proto:sf.substreams.entity.v1.EntityChanges
 
-network: arbitrum
+network: arbitrum-one
 
 sink:
   module: db_out

@@ -69,7 +69,7 @@ modules:
 
 
 
-network: arbitrum
+network: arbitrum-one
 
 sink:
   module: graph_out

@@ -18,8 +18,8 @@ impl Default for Data {
 	fn default() -> Self {
 
 		Self {
-			graph_network: "arbitrum".to_string(),  //polygon
-			chain_network: "arbitrum".to_string(),   // matic 
+			graph_network: "arbitrum-one".to_string(),  //polygon
+			chain_network: "arbitrum-one".to_string(),   // matic   ->  arbitrum-one 
 			start_block:  292978933     // 66108200 on polygon 
 		}
 

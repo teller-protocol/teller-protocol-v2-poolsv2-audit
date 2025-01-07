@@ -49,13 +49,15 @@ cargo run --bin exportbuild   //regenerate yaml files
 make && make build && make pack 
 
 
-graph auth --studio  
- graph deploy --studio tellerv2-lender-groups-arbitrum --version-label 0.4.21.120
+graph auth   
+ graph deploy   tellerv2-lender-groups-arbitrum --version-label 0.4.21.120
  
  0.4.21.120
 
 
 
+
+(  use graph deploy --studio    with old version of graph cli ) 
 
 
 ### graph names 
