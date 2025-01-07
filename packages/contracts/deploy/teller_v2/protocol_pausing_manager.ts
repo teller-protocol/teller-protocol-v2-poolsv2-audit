@@ -21,13 +21,17 @@ const deployFn: DeployFunction = async (hre) => {
     }
   )
 
-  // is this ok ? 
+  await tx.wait(1) // wait one block
+
+ 
   const { protocolOwnerSafe } = await hre.getNamedAccounts()
   hre.log('Transferring ownership of ProtocolPausingManager to Gnosis Safe...')
   await protocolPausingManager.transferOwnership(protocolOwnerSafe)
-  hre.log('done.')
+
 
     
+  await tx.wait(1) // wait one block
+    hre.log('done.')
   // need to xfer ownership ! 
 
   return true
