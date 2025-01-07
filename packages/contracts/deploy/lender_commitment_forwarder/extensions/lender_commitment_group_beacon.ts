@@ -75,12 +75,12 @@ const deployFn: DeployFunction = async (hre) => {
   )
 
  
-    //is this necessary ? 
-      //isnt this just an implementation?
-
-  const { protocolOwnerSafe } = await hre.getNamedAccounts()
+  //is this necessary ? 
+  //isnt this just an implementation?
+  
+  const { protocolTimelock , protocolOwnerSafe } = await hre.getNamedAccounts()
   hre.log('Transferring ownership of CommitmentGroupBeacon to Gnosis Safe...')
-  await commitmentGroupBeacon.transferOwnership(protocolOwnerSafe)
+  await commitmentGroupBeacon.transferOwnership(protocolTimelock)
   hre.log('done.')
 
   return true
