@@ -41,7 +41,8 @@ const deployFn: DeployFunction = async (hre) => {
 
  
 
-
+//this is why the owner of the beacon should be timelock controller ! 
+// so we can upgrade it like this . Using a proposal.  This actually goes AROUND the proxy admin, interestingly. 
   await hre.upgrades.proposeBatchTimelock({
     title: 'LenderGroups: PoolOracle View',
     description: ` 
