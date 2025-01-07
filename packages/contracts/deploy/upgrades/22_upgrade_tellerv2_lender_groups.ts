@@ -21,9 +21,7 @@ const deployFn: DeployFunction = async (hre) => {
 
 
   const protocolPausingManager = await hre.contracts.get('ProtocolPausingManager')
- 
-
-
+  
 
   var tellerV2Call = {
             fn: 'setProtocolPausingManager',
@@ -35,6 +33,8 @@ const deployFn: DeployFunction = async (hre) => {
     tellerV2Call = undefined ; 
 
     console.log("  ===== skipping reinitializer for tellerV2 =====");
+  }else{
+    console.log("  ===== calling reinitializer for tellerV2 =====");
   }
 
 
@@ -42,29 +42,22 @@ const deployFn: DeployFunction = async (hre) => {
     title: 'TellerV2 LenderGroups Upgrade',
     description: `
 
-# Upgrade contracts: 
 
-# Market Registry
+  # This proposal upgrades the following contracts:
 
-# TellerV2  + V2Calculations + ProtocolFee 
- 
-# CollateralManager
- 
-# CollateralEscrowV1
- 
+  # Market Registry
+  # TellerV2  + V2Calculations + ProtocolFee  
+  # CollateralManager 
+  # CollateralEscrowV1
+   
+  # In order to do so, it requires these new contracts to have already been deployed on the network: 
 
-
-# Requires deployed new contracts: 
-
- 
-# Smart Commitment Forwarder 
-# Lender Commitment Group Smart (Beacon)
-# Lender Commitment Group Factory 
-
-# Hypernative Oracle 
-
-# Protocol Pausing Manager 
-
+   
+  # Smart Commitment Forwarder 
+  # Lender Commitment Group Beacon
+  # Lender Commitment Group Factory 
+  # Protocol Pausing Manager 
+  # Hypernative Oracle (optional)
 
 
 `,
