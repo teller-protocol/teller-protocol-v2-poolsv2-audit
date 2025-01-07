@@ -45,19 +45,7 @@ const deployFn: DeployFunction = async (hre) => {
 
   const zeroAddress = "0x0000000000000000000000000000000000000000";
 
-
-
-  const tellerV2ProtocolOwner = await smartCommitmentForwarder.owner()
-
-  
-  hre.log( " ------- "  )
-  hre.log( "SCF owner: "  )
-  hre.log(  scfOwner  )
-  hre.log( " ------- "  )
  
-  if (scfOwner == zeroAddress) {
-    throw "Validation Error : SCF owner not defined " 
-  }
 
 
 
