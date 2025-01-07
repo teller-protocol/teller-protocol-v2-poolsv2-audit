@@ -41,20 +41,18 @@ substreams pack ./substreams.yaml
 
 
 
-make sure FACTORY_TRACKED_CONTRACT in 'lib'  is defined properly for network 
-make sure data in export_build.rs is defined properly for network 
+1. make sure FACTORY_TRACKED_CONTRACT in 'lib'  is defined properly for network 
+2. make sure data in export_build.rs is defined properly for network (see https://thegraph.com/docs/en/supported-networks/ ) 
 
 
-cargo run --bin exportbuild   //regenerate yaml files 
-make && make build && make pack 
+3. cargo run --bin exportbuild   //regenerate yaml files 
+4. make && make build && make pack 
 
 
-graph auth   
- graph deploy   tellerv2-lender-groups-arbitrum --version-label 0.4.21.120
+5. graph auth   (optional) 
+6. graph deploy   tellerv2-lender-groups-arbitrum --version-label 0.4.21.120
  
- 0.4.21.120
-
-
+ 0.4.21.120 
 
 
 (  use graph deploy --studio    with old version of graph cli ) 
