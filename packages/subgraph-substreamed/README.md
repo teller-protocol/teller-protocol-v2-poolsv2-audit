@@ -41,7 +41,7 @@ substreams pack ./substreams.yaml
 
 
 
-1. make sure FACTORY_TRACKED_CONTRACT in 'lib'  is defined properly for network 
+1. make sure FACTORY_TRACKED_CONTRACT+COLLATERAL_MANAGER_TRACKED_CONTRACT in 'lib'  is defined properly for network 
 2. make sure data in export_build.rs is defined properly for network (see https://thegraph.com/docs/en/supported-networks/ ) 
 
 
