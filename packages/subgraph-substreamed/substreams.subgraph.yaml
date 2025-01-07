@@ -23,7 +23,7 @@ binaries:
 modules:
   - name: store_factory_lendergroup_created
     kind: store
-    initialBlock: {{start_block}}
+    initialBlock: 66108200
     updatePolicy: set
     valueType: proto:dynamic_datasource
     inputs:
@@ -31,17 +31,16 @@ modules:
 
   - name: map_events
     kind: map
-    initialBlock: {{start_block}}
+    initialBlock: 66108200
     inputs:
       - source: sf.ethereum.type.v2.Block
       - store: store_factory_lendergroup_created
     output:
       type: proto:contract.v1.Events
 
-
   - name: store_lendergroup_pool_metrics_deltas
     kind: store
-    initialBlock: {{start_block}}
+    initialBlock: 66108200
     updatePolicy: set
     valueType: proto:dynamic_datasource
     inputs:
@@ -49,7 +48,7 @@ modules:
       
   - name: store_lendergroup_pool_metrics
     kind: store
-    initialBlock: {{start_block}}
+    initialBlock: 66108200
     updatePolicy: set
     valueType: proto:dynamic_datasource
     inputs:
@@ -59,7 +58,7 @@ modules:
 
   - name: graph_out
     kind: map
-    initialBlock:  {{start_block}}
+    initialBlock: 66108200
     inputs:
       - map: map_events
       - store: store_lendergroup_pool_metrics_deltas
@@ -69,13 +68,13 @@ modules:
       type: proto:sf.substreams.entity.v1.EntityChanges
 
 
-network: {{graph_network}}
+
+network: arbitrum
 
 sink:
-  module: db_out
-  type: sf.substreams.sink.sql.v1.Service
+  module: graph_out
+  type: sf.substreams.sink.subgraph.v1.Service
   config:
-    schema: "./schema.sql"
-    engine: postgres
-    postgraphile_frontend:
-      enabled: true
+    schema: "./schema.graphql"
+    subgraph_yaml: "./subgraph.yaml"
+    postgres_direct_protocol_access: true

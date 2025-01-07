@@ -23,7 +23,7 @@ binaries:
 modules:
   - name: store_factory_lendergroup_created
     kind: store
-    initialBlock: {{start_block}}
+    initialBlock: 66108200
     updatePolicy: set
     valueType: proto:dynamic_datasource
     inputs:
@@ -31,51 +31,38 @@ modules:
 
   - name: map_events
     kind: map
-    initialBlock: {{start_block}}
+    initialBlock: 66108200
     inputs:
       - source: sf.ethereum.type.v2.Block
       - store: store_factory_lendergroup_created
     output:
       type: proto:contract.v1.Events
 
-
-  - name: store_lendergroup_pool_metrics_deltas
-    kind: store
-    initialBlock: {{start_block}}
-    updatePolicy: set
-    valueType: proto:dynamic_datasource
+  - name: db_out
+    kind: map
+    initialBlock: 66108200
     inputs:
       - map: map_events
-      
-  - name: store_lendergroup_pool_metrics
-    kind: store
-    initialBlock: {{start_block}}
-    updatePolicy: set
-    valueType: proto:dynamic_datasource
-    inputs:
-      - store: store_lendergroup_pool_metrics_deltas
-        mode: deltas
-      
+    output:
+      type: proto:sf.substreams.sink.database.v1.DatabaseChanges
 
   - name: graph_out
     kind: map
-    initialBlock:  {{start_block}}
+    initialBlock: 66108200
     inputs:
       - map: map_events
-      - store: store_lendergroup_pool_metrics_deltas
-        mode: deltas
-      - store: store_lendergroup_pool_metrics
     output:
       type: proto:sf.substreams.entity.v1.EntityChanges
 
-
-network: {{graph_network}}
+network: arbitrum
 
 sink:
   module: db_out
   type: sf.substreams.sink.sql.v1.Service
   config:
-    schema: "./schema.sql"
-    engine: postgres
+    schema: "./schema.clickhouse.sql"
+    engine: clickhouse
     postgraphile_frontend:
-      enabled: true
+      enabled: false
+    rest_frontend:
+      enabled: false

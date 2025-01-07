@@ -1,3 +1,4 @@
+use std::path::Path;
 use handlebars::Handlebars;
 use serde::Serialize;
 use std::collections::HashMap;
@@ -6,7 +7,8 @@ use std::io::{self, Read, Write};
 
 #[derive(Serialize)]
 struct Data {
-    network: String,
+    graph_network: String,
+    chain_network: String ,
     start_block: u32 ,
    
 }
@@ -16,14 +18,15 @@ impl Default for Data {
 	fn default() -> Self {
 
 		Self {
-
-			network: "arbitrum",
-			start_block: "500"
+			graph_network: "arbitrum".to_string(),  //polygon
+			chain_network: "arbitrum".to_string(),   // matic 
+			start_block:  66108200    // 66108200 on polygon 
 		}
 
 	}
 
 }
+
 
 // Function to load the template file content
 fn load_template(file_path: &str) -> io::Result<String> {
@@ -40,32 +43,44 @@ fn process_template(template: &str, data: &Data) -> String {
     rendered
 }
 
-// Function to process files and replace placeholders
-fn process_file(file_path: &str, data: &Data) -> io::Result<()> {
-    let template = load_template(file_path)?;
+// Function to process a single file and write output to the output folder
+fn process_file(input_file: &str, output_file: &str, data: &Data) -> io::Result<()> {
+    let template = load_template(input_file)?;
     let updated_content = process_template(&template, &data);
 
-    // Write the updated content back to the file
-    let mut file = File::create(file_path)?;
+    // Write the updated content to the output file
+    let mut file = File::create(output_file)?;
     file.write_all(updated_content.as_bytes())?;
-    println!("File processed: {}", file_path);
+    println!("File processed: {} -> {}", input_file, output_file);
     Ok(())
 }
+
 
 fn main() -> io::Result<()> {
     // Define the data to be injected into the template
     let data = Data::default();
 
 
-    let input_dir = "./build_inputs";
-    let output_dir = "../";
+    let input_folder = "./config/build_inputs";
+    let output_folder = "./";
 
-	 if !Path::new(output_dir).exists() {
-        fs::create_dir_all(output_dir)?;
+	println!("Input folder: {}", input_folder);
+    println!("Output folder: {}", output_folder);
+
+    // Check if input folder exists
+    if !Path::new(input_folder).exists() {
+        eprintln!("Error: Input folder '{}' does not exist.", input_folder);
+        std::process::exit(1);
+    }
+
+    // Ensure the output directory exists
+    if !Path::new(output_folder).exists() {
+        println!("Output folder does not exist. Creating it...");
+        fs::create_dir_all(output_folder).expect("Failed to create output folder");
     }
 
     // Process all files in the input directory
-    process_files_in_directory(input_dir, output_dir, &data)?;
+    process_files_in_directory(input_folder, output_folder, &data)?;
 
 
 

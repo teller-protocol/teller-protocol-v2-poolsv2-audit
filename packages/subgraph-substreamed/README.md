@@ -41,6 +41,8 @@ substreams pack ./substreams.yaml
 
 62350000
 
+
+cargo run --bin exportbuild   //regenerate yaml files 
 make && make build && make pack 
 
 

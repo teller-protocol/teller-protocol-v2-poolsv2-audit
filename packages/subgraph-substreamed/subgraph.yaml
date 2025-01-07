@@ -7,7 +7,7 @@ schema:
 dataSources:
   - kind: substreams
     name: lender-group-substream
-    network: {{chain_network}}
+    network: arbitrum
     source:
       package:
         moduleName: graph_out
