@@ -21,7 +21,7 @@ const deployFn: DeployFunction = async (hre) => {
     }
   )
 
-  await tx.wait(1) // wait one block
+  // // wait one block
 
  
   const { protocolOwnerSafe } = await hre.getNamedAccounts()
@@ -30,9 +30,9 @@ const deployFn: DeployFunction = async (hre) => {
 
 
     
-  await tx.wait(1) // wait one block
+  //  // wait one block
     hre.log('done.')
-  // need to xfer ownership ! 
+  
 
   return true
 }
