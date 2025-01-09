@@ -50,7 +50,7 @@ substreams pack ./substreams.yaml
 
 
 5. graph auth   (optional) 
-6. graph deploy   tellerv2-lender-groups-arbitrum --version-label 0.4.21.120
+6. graph deploy   tellerv2-lender-groups-base --version-label 0.4.21.120
  
  0.4.21.120 
 
@@ -61,8 +61,8 @@ substreams pack ./substreams.yaml
 ### graph names 
 
 tellerv2-lender-groups-polygon  *
-tellerv2-lender-groups-arbitrum 
-tellerv2-lender-groups-base 
+tellerv2-lender-groups-arbitrum *
+tellerv2-lender-groups-base  * 
 tellerv2-lender-groups-mainnet 
 
 

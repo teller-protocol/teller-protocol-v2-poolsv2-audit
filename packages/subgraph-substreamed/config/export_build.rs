@@ -13,14 +13,47 @@ struct Data {
    
 }
 
+/*
+
+Polygon
+            {
+                graph_network: "polygon".to_string(),  
+                chain_network: "matic".to_string(),    
+                start_block:    66108200 on polygon 
+          }
+
+
+Arbitrum 
+        { 
+
+          graph_network: "arbitrum-one".to_string(),  
+            chain_network: "arbitrum-one".to_string(),   
+            start_block:  292978933     
+
+        }
+
+
+
+Base 
+        { 
+
+            graph_network: "base".to_string(),  
+            chain_network: "base".to_string(),   
+            start_block:  24824400    
+
+        }
+
+
+*/
+
 impl Default for Data {
 
 	fn default() -> Self {
 
 		Self {
-			graph_network: "arbitrum-one".to_string(),  //polygon
-			chain_network: "arbitrum-one".to_string(),   // matic   ->  arbitrum-one 
-			start_block:  292978933     // 66108200 on polygon 
+			 graph_network: "base".to_string(),  
+            chain_network: "base".to_string(),   
+            start_block:  24824400    
 		}
 
 	}
