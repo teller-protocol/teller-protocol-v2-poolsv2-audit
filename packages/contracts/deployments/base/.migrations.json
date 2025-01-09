@@ -29,5 +29,6 @@
   "lender-commitment-group-factory:deploy": 1736438227,
   "protocol-pausing-manager:deploy": 1736438247,
   "hypernative-oracle-mock:deploy": 1736438252,
-  "lender-groups:upgrade": 1736438327
+  "lender-groups:upgrade": 1736438327,
+  "validate-deployments": 1736441311
 }
