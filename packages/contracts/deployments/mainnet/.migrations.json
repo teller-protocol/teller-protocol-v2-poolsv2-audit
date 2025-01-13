@@ -29,5 +29,7 @@
   "lender-commitment-forwarder:alpha:upgrade_max_principal": 1731096405,
   "lender-commitment-forwarder:extensions:flash-rollover-widget:deploy": 1736786005,
   "smart-commitment-forwarder:deploy": 1736786030,
-  "lender-commitment-group-beacon:deploy": 1736786067
+  "lender-commitment-group-beacon:deploy": 1736786067,
+  "lender-commitment-group-factory:deploy": 1736787746,
+  "protocol-pausing-manager:deploy": 1736787770
 }
