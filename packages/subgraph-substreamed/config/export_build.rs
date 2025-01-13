@@ -44,6 +44,18 @@ Base
         }
 
 
+
+
+Mainnet 
+        { 
+
+            graph_network: "mainnet".to_string(),  
+            chain_network: "mainnet".to_string(),   
+            start_block:  21616780    
+
+        }
+
+
 */
 
 impl Default for Data {
@@ -51,9 +63,9 @@ impl Default for Data {
 	fn default() -> Self {
 
 		Self {
-			 graph_network: "base".to_string(),  
-            chain_network: "base".to_string(),   
-            start_block:  24824400    
+			 graph_network: "mainnet".to_string(),  
+            chain_network: "mainnet".to_string(),   
+            start_block:  21616780    
 		}
 
 	}

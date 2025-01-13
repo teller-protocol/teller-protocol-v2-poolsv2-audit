@@ -50,7 +50,7 @@ substreams pack ./substreams.yaml
 
 
 5. graph auth   (optional) 
-6. graph deploy   tellerv2-lender-groups-base --version-label 0.4.21.120
+6. graph deploy   tellerv2-lender-groups-mainnet --version-label 0.4.21.120
  
  0.4.21.120 
 
