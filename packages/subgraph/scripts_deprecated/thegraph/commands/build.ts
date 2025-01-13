@@ -42,6 +42,8 @@ export const build = async (args: BuildArgs): Promise<string | undefined> => {
   }
 
   if (block_handler !== undefined) {
+      logger?.log(`Enabling block handler`);
+
     config.block_handler = {
       enabled: true,
       block: block_handler.block
