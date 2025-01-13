@@ -63,7 +63,7 @@ substreams pack ./substreams.yaml
 tellerv2-lender-groups-polygon  *
 tellerv2-lender-groups-arbitrum *
 tellerv2-lender-groups-base  * 
-tellerv2-lender-groups-mainnet 
+tellerv2-lender-groups-mainnet *
 
 
 
