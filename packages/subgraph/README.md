@@ -42,6 +42,8 @@ yarn build
  
 
 
+4.1.  ( make sure graft base is OK -- in subgraph / config {{ networkname.json }} )
+
 
 
 5. auth 
