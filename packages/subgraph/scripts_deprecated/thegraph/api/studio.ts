@@ -88,6 +88,9 @@ export const makeStudio = async (
         data?: any;
       } = JSON.parse(dataStr);
       if (data.errors) {
+
+        console.log(data.errors)
+
         const messages = data.errors.map(e => {
           if (e.extensions.code === "UNAUTHENTICATED") {
             const prev = studioConfig[networkConfig.owner.address] ?? {};
@@ -135,6 +138,8 @@ export const makeStudio = async (
 
       let cookie: string | null = null;
       const Cookie = studioConfig[networkConfig.owner.address]?.Cookie;
+     
+
       if (Cookie && SAVE_LOAD_COOKIE) {
         if (new Date(Cookie.expiration).getTime() > Date.now()) {
           cookie = Cookie.value;
