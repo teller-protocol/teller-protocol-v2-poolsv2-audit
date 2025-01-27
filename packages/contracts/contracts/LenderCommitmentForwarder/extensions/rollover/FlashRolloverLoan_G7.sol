@@ -7,26 +7,34 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 // Interfaces
-import "../../interfaces/ITellerV2.sol";
-import "../../interfaces/IProtocolFee.sol";
-import "../../interfaces/ITellerV2Storage.sol";
-import "../../interfaces/IMarketRegistry.sol";
-import "../../interfaces/ILenderCommitmentForwarder.sol";
-import "../../interfaces/IFlashRolloverLoan.sol";
-import "../../libraries/NumbersLib.sol";
+import "../../../interfaces/ITellerV2.sol";
+import "../../../interfaces/IProtocolFee.sol";
+import "../../../interfaces/ITellerV2Storage.sol";
+import "../../../interfaces/IMarketRegistry.sol";
+import "../../../interfaces/ILenderCommitmentForwarder.sol";
+import "../../../interfaces/ISmartCommitmentForwarder.sol";
+import "../../../interfaces/IFlashRolloverLoan_G6.sol";
+import "../../../libraries/NumbersLib.sol";
 
-import { IPool } from "../../interfaces/aave/IPool.sol";
-import { IFlashLoanSimpleReceiver } from "../../interfaces/aave/IFlashLoanSimpleReceiver.sol";
-import { IPoolAddressesProvider } from "../../interfaces/aave/IPoolAddressesProvider.sol";
+import { IPool } from "../../../interfaces/aave/IPool.sol";
+import { IFlashLoanSimpleReceiver } from "../../../interfaces/aave/IFlashLoanSimpleReceiver.sol";
+import { IPoolAddressesProvider } from "../../../interfaces/aave/IPoolAddressesProvider.sol";
 
-contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
+
+
+/*
+    G7:  Additionally adds calculations for SCF 
+*/
+
+
+contract FlashRolloverLoan_G7 is IFlashLoanSimpleReceiver, IFlashRolloverLoan_G6 {
     using AddressUpgradeable for address;
     using NumbersLib for uint256;
 
     /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
     ITellerV2 public immutable TELLER_V2;
     /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
-    ILenderCommitmentForwarder public immutable LENDER_COMMITMENT_FORWARDER;
+    
 
     address public immutable POOL_ADDRESSES_PROVIDER;
 
@@ -39,6 +47,7 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
 
     struct AcceptCommitmentArgs {
         uint256 commitmentId;
+        address smartCommitmentAddress;  //if this is not address(0), we will use this ! leave empty if not used. 
         uint256 principalAmount;
         uint256 collateralAmount;
         uint256 collateralTokenId;
@@ -61,13 +70,9 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
         address _tellerV2,
-        address _lenderCommitmentForwarder,
         address _poolAddressesProvider
     ) {
         TELLER_V2 = ITellerV2(_tellerV2);
-        LENDER_COMMITMENT_FORWARDER = ILenderCommitmentForwarder(
-            _lenderCommitmentForwarder
-        );
         POOL_ADDRESSES_PROVIDER = _poolAddressesProvider;
     }
 
@@ -94,20 +99,24 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
      * @param _flashLoanAmount Amount of flash loan to be borrowed for the rollover.
      * @param _borrowerAmount Additional amount that the borrower may want to add during rollover.
      * @param _acceptCommitmentArgs Commitment arguments that might be necessary for internal operations.
-     *
-     * @return newLoanId_ Identifier of the new loan post rollover.
+     * 
      */
     function rolloverLoanWithFlash(
+        address _lenderCommitmentForwarder,
         uint256 _loanId,
         uint256 _flashLoanAmount,
         uint256 _borrowerAmount, //an additional amount borrower may have to add
+        uint256 _rewardAmount,
+        address _rewardRecipient,
         AcceptCommitmentArgs calldata _acceptCommitmentArgs
-    ) external returns (uint256 newLoanId_) {
+    ) external   {
         address borrower = TELLER_V2.getLoanBorrower(_loanId);
         require(borrower == msg.sender, "CommitmentRolloverLoan: not borrower");
 
         // Get lending token and balance before
         address lendingToken = TELLER_V2.getLoanLendingToken(_loanId);
+
+        require( _rewardAmount <= _flashLoanAmount/ 10, "Reward amount may only be up to 1/10 of flash loan amount" );
 
         if (_borrowerAmount > 0) {
             IERC20(lendingToken).transferFrom(
@@ -125,9 +134,12 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
             _flashLoanAmount,
             abi.encode(
                 RolloverCallbackArgs({
+                    lenderCommitmentForwarder :_lenderCommitmentForwarder,
                     loanId: _loanId,
                     borrower: borrower,
                     borrowerAmount: _borrowerAmount,
+                    rewardRecipient: _rewardRecipient,
+                    rewardAmount: _rewardAmount,
                     acceptCommitmentArgs: abi.encode(_acceptCommitmentArgs)
                 })
             ),
@@ -185,6 +197,7 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
         // Accept commitment and receive funds to this contract
 
         (uint256 newLoanId, uint256 acceptCommitmentAmount) = _acceptCommitment(
+            _rolloverArgs.lenderCommitmentForwarder,
             _rolloverArgs.borrower,
             _flashToken,
             acceptCommitmentArgs
@@ -202,6 +215,19 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
             _flashFees;
 
         if (fundsRemaining > 0) {
+
+            if (_rolloverArgs.rewardAmount > 0){
+
+                //make sure reward amount isnt TOO much here ? 
+
+                fundsRemaining -= _rolloverArgs.rewardAmount;
+                IERC20Upgradeable(_flashToken).transfer(
+                    _rolloverArgs.rewardRecipient,
+                    _rolloverArgs.rewardAmount
+                );
+
+            }
+
             IERC20Upgradeable(_flashToken).transfer(
                 _rolloverArgs.borrower,
                 fundsRemaining
@@ -268,6 +294,7 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
      * @return acceptCommitmentAmount_ The amount received from accepting the commitment.
      */
     function _acceptCommitment(
+        address lenderCommitmentForwarder,
         address borrower,
         address principalToken,
         AcceptCommitmentArgs memory _commitmentArgs
@@ -279,53 +306,84 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
         uint256 fundsBeforeAcceptCommitment = IERC20Upgradeable(principalToken)
             .balanceOf(address(this));
 
-        bool usingMerkleProof = _commitmentArgs.merkleProof.length > 0;
 
-        if (usingMerkleProof) {
-            bytes memory responseData = address(LENDER_COMMITMENT_FORWARDER)
-                .functionCall(
-                    abi.encodePacked(
-                        abi.encodeWithSelector(
-                            ILenderCommitmentForwarder
-                                .acceptCommitmentWithRecipientAndProof
-                                .selector,
-                            _commitmentArgs.commitmentId,
-                            _commitmentArgs.principalAmount,
-                            _commitmentArgs.collateralAmount,
-                            _commitmentArgs.collateralTokenId,
-                            _commitmentArgs.collateralTokenAddress,
-                            address(this),
-                            _commitmentArgs.interestRate,
-                            _commitmentArgs.loanDuration,
-                            _commitmentArgs.merkleProof
-                        ),
-                        borrower //cant be msg.sender because of the flash flow
-                    )
-                );
 
-            (bidId_) = abi.decode(responseData, (uint256));
-        } else {
-            bytes memory responseData = address(LENDER_COMMITMENT_FORWARDER)
-                .functionCall(
-                    abi.encodePacked(
-                        abi.encodeWithSelector(
-                            ILenderCommitmentForwarder
-                                .acceptCommitmentWithRecipient
-                                .selector,
-                            _commitmentArgs.commitmentId,
-                            _commitmentArgs.principalAmount,
-                            _commitmentArgs.collateralAmount,
-                            _commitmentArgs.collateralTokenId,
-                            _commitmentArgs.collateralTokenAddress,
-                            address(this),
-                            _commitmentArgs.interestRate,
-                            _commitmentArgs.loanDuration
-                        ),
-                        borrower //cant be msg.sender because of the flash flow
-                    )
-                );
+        if (_commitmentArgs.smartCommitmentAddress != address(0)) {
 
-            (bidId_) = abi.decode(responseData, (uint256));
+             bytes memory responseData = address(lenderCommitmentForwarder)
+                    .functionCall(
+                        abi.encodePacked(
+                            abi.encodeWithSelector(
+                                ISmartCommitmentForwarder
+                                    .acceptSmartCommitmentWithRecipient
+                                    .selector,
+                                _commitmentArgs.smartCommitmentAddress,
+                                _commitmentArgs.principalAmount,
+                                _commitmentArgs.collateralAmount,
+                                _commitmentArgs.collateralTokenId,
+                                _commitmentArgs.collateralTokenAddress,
+                                address(this),
+                                _commitmentArgs.interestRate,
+                                _commitmentArgs.loanDuration
+                            ),
+                            borrower //cant be msg.sender because of the flash flow
+                        )
+                    );
+
+                (bidId_) = abi.decode(responseData, (uint256));
+
+
+        }else { 
+
+            bool usingMerkleProof = _commitmentArgs.merkleProof.length > 0;
+
+            if (usingMerkleProof) {
+                bytes memory responseData = address(lenderCommitmentForwarder)
+                    .functionCall(
+                        abi.encodePacked(
+                            abi.encodeWithSelector(
+                                ILenderCommitmentForwarder
+                                    .acceptCommitmentWithRecipientAndProof
+                                    .selector,
+                                _commitmentArgs.commitmentId,
+                                _commitmentArgs.principalAmount,
+                                _commitmentArgs.collateralAmount,
+                                _commitmentArgs.collateralTokenId,
+                                _commitmentArgs.collateralTokenAddress,
+                                address(this),
+                                _commitmentArgs.interestRate,
+                                _commitmentArgs.loanDuration,
+                                _commitmentArgs.merkleProof
+                            ),
+                            borrower //cant be msg.sender because of the flash flow
+                        )
+                    );
+
+                (bidId_) = abi.decode(responseData, (uint256));
+            } else {
+                bytes memory responseData = address(lenderCommitmentForwarder)
+                    .functionCall(
+                        abi.encodePacked(
+                            abi.encodeWithSelector(
+                                ILenderCommitmentForwarder
+                                    .acceptCommitmentWithRecipient
+                                    .selector,
+                                _commitmentArgs.commitmentId,
+                                _commitmentArgs.principalAmount,
+                                _commitmentArgs.collateralAmount,
+                                _commitmentArgs.collateralTokenId,
+                                _commitmentArgs.collateralTokenAddress,
+                                address(this),
+                                _commitmentArgs.interestRate,
+                                _commitmentArgs.loanDuration
+                            ),
+                            borrower //cant be msg.sender because of the flash flow
+                        )
+                    );
+
+                (bidId_) = abi.decode(responseData, (uint256));
+            }
+
         }
 
         uint256 fundsAfterAcceptCommitment = IERC20Upgradeable(principalToken)
@@ -345,14 +403,14 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
 
     /**
      * @notice Calculates the amount for loan rollover, determining if the borrower owes or receives funds.
-     * @param _loanId The ID of the loan to calculate the rollover amount for.
-     * @param _commitmentArgs Arguments for the commitment.
-     * @param _timestamp The timestamp for when the calculation is executed.
     
      */
     function calculateRolloverAmount(
-        uint256 _loanId,
-        AcceptCommitmentArgs calldata _commitmentArgs,
+        uint16 marketFeePct,
+        uint16 protocolFeePct, 
+        uint256 _loanId,      
+        uint256 principalAmount,
+        uint256 _rewardAmount, 
         uint16 _flashloanPremiumPct,
         uint256 _timestamp
     ) external view returns (uint256 _flashAmount, int256 _borrowerAmount) {
@@ -361,13 +419,7 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
             _timestamp
         );
 
-        uint256 _marketId = _getMarketIdForCommitment(
-            _commitmentArgs.commitmentId
-        );
-        uint16 marketFeePct = _getMarketFeePct(_marketId);
-        uint16 protocolFeePct = _getProtocolFeePct();
-
-        uint256 commitmentPrincipalRequested = _commitmentArgs.principalAmount;
+        uint256 commitmentPrincipalRequested = principalAmount; // _commitmentArgs.principalAmount;
         uint256 amountToMarketplace = commitmentPrincipalRequested.percent(
             marketFeePct
         );
@@ -389,20 +441,36 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
         _borrowerAmount =
             int256(commitmentPrincipalReceived) -
             int256(repayFullAmount) -
-            int256(_flashLoanFee);
+            int256(_flashLoanFee) -
+            int256(_rewardAmount);
     }
+
+
+     function getMarketIdForCommitment(
+       address _lenderCommitmentForwarder, 
+       uint256 _commitmentId
+    ) external view returns (uint256) {
+        return _getMarketIdForCommitment(_lenderCommitmentForwarder, _commitmentId);  
+    }
+
+    function getMarketFeePct(
+       uint256 _marketId
+    ) external view returns (uint16) {
+        return _getMarketFeePct(_marketId);  
+    }
+   
 
     /**
      * @notice Retrieves the market ID associated with a given commitment.
      * @param _commitmentId The ID of the commitment for which to fetch the market ID.
      * @return The ID of the market associated with the provided commitment.
      */
-    function _getMarketIdForCommitment(uint256 _commitmentId)
+    function _getMarketIdForCommitment(address _lenderCommitmentForwarder, uint256 _commitmentId)
         internal
         view
         returns (uint256)
     {
-        return LENDER_COMMITMENT_FORWARDER.getCommitmentMarketId(_commitmentId);
+        return ILenderCommitmentForwarder(_lenderCommitmentForwarder).getCommitmentMarketId(_commitmentId);
     }
 
     /**
@@ -428,7 +496,7 @@ contract FlashRolloverLoan_G3 is IFlashLoanSimpleReceiver, IFlashRolloverLoan {
      * @notice Fetches the protocol fee percentage from the Teller V2 protocol.
      * @return The protocol fee percentage as defined in the Teller V2 protocol.
      */
-    function _getProtocolFeePct() internal view returns (uint16) {
+   /* function _getProtocolFeePct() internal view returns (uint16) {
         return IProtocolFee(address(TELLER_V2)).protocolFee();
-    }
+    }*/
 }

@@ -5,7 +5,7 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts-upgradeable/utils/AddressUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "../../libraries/NumbersLib.sol";
+import "../../../libraries/NumbersLib.sol";
 
 // Interfaces
 import "./FlashRolloverLoan_G1.sol";

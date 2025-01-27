@@ -7,17 +7,19 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 // Interfaces
-import "../../interfaces/ITellerV2.sol";
-import "../../interfaces/IProtocolFee.sol";
-import "../../interfaces/ITellerV2Storage.sol";
-import "../../interfaces/IMarketRegistry.sol";
-import "../../interfaces/ILenderCommitmentForwarder.sol";
-import "../../interfaces/IFlashRolloverLoan_G4.sol";
-import "../../libraries/NumbersLib.sol";
+import "../../../interfaces/ITellerV2.sol";
+import "../../../interfaces/IProtocolFee.sol";
+import "../../../interfaces/ITellerV2Storage.sol";
+import "../../../interfaces/IMarketRegistry.sol";
+import "../../../interfaces/ILenderCommitmentForwarder.sol";
+import "../../../interfaces/ISmartCommitmentForwarder.sol";
+import "../../../interfaces/IFlashRolloverLoan_G6.sol";
+import "../../../libraries/NumbersLib.sol";
 
-import { IPool } from "../../interfaces/aave/IPool.sol";
-import { IFlashLoanSimpleReceiver } from "../../interfaces/aave/IFlashLoanSimpleReceiver.sol";
-import { IPoolAddressesProvider } from "../../interfaces/aave/IPoolAddressesProvider.sol";
+import { IPool } from "../../../interfaces/aave/IPool.sol";
+import { IFlashLoanSimpleReceiver } from "../../../interfaces/aave/IFlashLoanSimpleReceiver.sol";
+import { IPoolAddressesProvider } from "../../../interfaces/aave/IPoolAddressesProvider.sol";
+
 
 contract FlashRolloverLoan_G4 is IFlashLoanSimpleReceiver, IFlashRolloverLoan_G4 {
     using AddressUpgradeable for address;
