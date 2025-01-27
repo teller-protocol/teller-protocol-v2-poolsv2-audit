@@ -30,7 +30,9 @@ import '../../../libraries/uniswap/periphery/libraries/CallbackValidation.sol';
 import '../../../libraries/uniswap/periphery/libraries/TransferHelper.sol';
 import '../../../libraries/uniswap/periphery/interfaces/ISwapRouter.sol';
 
+import '../../../libraries/uniswap/core/libraries/LowGasSafeMath.sol';
 
+import '../../../libraries/uniswap/core/interfaces/callback/IUniswapV3FlashCallback.sol';
 /*
    https://docs.uniswap.org/contracts/v3/guides/flash-integrations/inheritance-constructors
 */
@@ -568,13 +570,13 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments, ISwa
             fundsBeforeAcceptCommitment;
     }
 
-    function ADDRESSES_PROVIDER() public view returns (IPoolAddressesProvider) {
+  /*  function ADDRESSES_PROVIDER() public view returns (IPoolAddressesProvider) {
         return IPoolAddressesProvider(POOL_ADDRESSES_PROVIDER);
     }
 
     function POOL() public view returns (IPool) {
         return IPool(ADDRESSES_PROVIDER().getPool());
-    }
+    }*/
 
     /**
      * @notice Calculates the amount for loan rollover, determining if the borrower owes or receives funds.
@@ -589,6 +591,8 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments, ISwa
         uint16 _flashloanPremiumPct,
         uint256 _timestamp
     ) external view returns (uint256 _flashAmount, int256 _borrowerAmount) {
+        /*
+
         Payment memory repayAmountOwed = TELLER_V2.calculateAmountOwed(
             _loanId,
             _timestamp
@@ -618,6 +622,8 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments, ISwa
             int256(repayFullAmount) -
             int256(_flashLoanFee) -
             int256(_rewardAmount);
+
+            */
     }
 
 

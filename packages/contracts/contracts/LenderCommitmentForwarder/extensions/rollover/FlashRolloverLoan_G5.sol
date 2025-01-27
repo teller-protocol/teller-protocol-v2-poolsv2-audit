@@ -13,7 +13,7 @@ import "../../../interfaces/ITellerV2Storage.sol";
 import "../../../interfaces/IMarketRegistry.sol";
 import "../../../interfaces/ILenderCommitmentForwarder.sol";
 import "../../../interfaces/ISmartCommitmentForwarder.sol";
-import "../../../interfaces/IFlashRolloverLoan_G6.sol";
+import "../../../interfaces/IFlashRolloverLoan_G4.sol"; 
 import "../../../libraries/NumbersLib.sol";
 
 import { IPool } from "../../../interfaces/aave/IPool.sol";
