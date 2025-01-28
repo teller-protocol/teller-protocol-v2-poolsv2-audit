@@ -166,6 +166,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
         address borrower = TELLER_V2.getLoanBorrower(_loanId);
         require(borrower == msg.sender, "CommitmentRolloverLoan: not borrower");
 
+{
         // Get lending token and balance before
         address lendingToken = TELLER_V2.getLoanLendingToken(_loanId);
 
@@ -178,12 +179,17 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
                 _borrowerAmount
             );
         }
-  
+}
 
 
+ IUniswapV3Pool pool;
+
+{
         PoolAddress.PoolKey memory poolKey =
         PoolAddress.PoolKey({token0: _flashSwapArgs.token0, token1: _flashSwapArgs.token1, fee: _flashSwapArgs.fee1});
-        IUniswapV3Pool pool = IUniswapV3Pool(PoolAddress.computeAddress(factory, poolKey));
+        pool = IUniswapV3Pool(PoolAddress.computeAddress(factory, poolKey));
+}
+
         pool.flash(
             address(this),
             _flashSwapArgs.amount0,   //can we flash just a single amount ? 
