@@ -83,8 +83,8 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
         address token1;
         uint24 fee1;
 
-          uint24 fee2;
-        uint24 fee3;
+        // uint24 fee2;
+        //uint24 fee3;
 
         uint256 amount0;
         uint256 amount1; 
@@ -267,7 +267,16 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
 
 
+    /*
+     At the end of this fn, the pools balances must be GEQ than their balances at the start.
+    
 
+    we should be flash borrowing these amounts which we can use during execution ! 
+
+        _flashSwapArgs.amount0,    
+        _flashSwapArgs.amount1,
+
+    */
     function uniswapV3FlashCallback(
         uint256 fee0,
         uint256 fee1,
@@ -292,62 +301,67 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
 
 
-          CallbackValidation.verifyCallback(factory, flashSwapArgs.poolKey); //verifies that only uniswap contract can call this fn 
+        CallbackValidation.verifyCallback(factory, flashSwapArgs.poolKey); //verifies that only uniswap contract can call this fn 
 
 
         address token0 = flashSwapArgs.poolKey.token0;
         address token1 = flashSwapArgs.poolKey.token1;
 
-        TransferHelper.safeApprove(token0, address(swapRouter), flashSwapArgs.amount0);
-        TransferHelper.safeApprove(token1, address(swapRouter), flashSwapArgs.amount1);
 
-        // profitable check
-        // exactInputSingle will fail if this amount not met
-        uint256 amount1Min = LowGasSafeMath.add(flashSwapArgs.amount1, fee1);
-        uint256 amount0Min = LowGasSafeMath.add(flashSwapArgs.amount0, fee0);
 
-        // call exactInputSingle for swapping token1 for token0 in pool w/fee2
-        uint256 amountOut0 =
-            swapRouter.exactInputSingle(
-                ISwapRouter.ExactInputSingleParams({
-                    tokenIn: token1,
-                    tokenOut: token0,
-                    fee: flashSwapArgs.fee2,
-                    recipient: address(this),
-                    deadline: block.timestamp + 200,
-                    amountIn: flashSwapArgs.amount1,
-                    amountOutMinimum: amount0Min,
-                    sqrtPriceLimitX96: 0
-                })
-            );
 
-        // call exactInputSingle for swapping token0 for token 1 in pool w/fee3
-        uint256 amountOut1 =
-            swapRouter.exactInputSingle(
-                ISwapRouter.ExactInputSingleParams({
-                    tokenIn: token0,
-                    tokenOut: token1,
-                    fee: flashSwapArgs.fee3,
-                    recipient: address(this),
-                    deadline: block.timestamp + 200,
-                    amountIn: flashSwapArgs.amount0,
-                    amountOutMinimum: amount1Min,
-                    sqrtPriceLimitX96: 0
-                })
-            );
 
-        // end up with amountOut0 of token0 from first swap and amountOut1 of token1 from second swap
+
+
+
+            // ---- rollover ---- 
+
+         uint256 repaymentAmount = _repayLoanFull(
+            _rolloverArgs.loanId,
+
+            //we use token 0 for our flash loan -- can ignore token 1 
+            flashSwapArgs.token0,
+            flashSwapArgs.amount0
+        );
+
+    
+
+        // Accept commitment and receive funds to this contract
+
+        (uint256 newLoanId, uint256 acceptCommitmentAmount) = _acceptCommitment(
+            _rolloverArgs.lenderCommitmentForwarder,
+            _rolloverArgs.borrower,
+            flashSwapArgs.token0,
+            acceptCommitmentArgs
+        );
+
+
+
+        //approve the repayment for the flash loan
         uint256 amount0Owed = LowGasSafeMath.add(flashSwapArgs.amount0, fee0);
         uint256 amount1Owed = LowGasSafeMath.add(flashSwapArgs.amount1, fee1);
 
         TransferHelper.safeApprove(token0, address(this), amount0Owed);
         TransferHelper.safeApprove(token1, address(this), amount1Owed);
 
+        //pay back uniswap pool so we dont revert ! 
         if (amount0Owed > 0) pay(token0, address(this), msg.sender, amount0Owed);
         if (amount1Owed > 0) pay(token1, address(this), msg.sender, amount1Owed);
 
-        // if profitable pay profits to payer
-        if (amountOut0 > amount0Owed) {
+
+
+        // send any dust to the borrower. ..
+
+        uint256 fundsRemaining = acceptCommitmentAmount +
+            _rolloverArgs.borrowerAmount -
+            repaymentAmount -
+            fee0;
+
+
+        
+        // prob need to change me 
+        // if profitable pay profits to borrower
+      /*  if (amountOut0 > amount0Owed) {
             uint256 profit0 = LowGasSafeMath.sub(amountOut0, amount0Owed);
 
             TransferHelper.safeApprove(token0, address(this), profit0);
@@ -358,6 +372,9 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
             TransferHelper.safeApprove(token0, address(this), profit1);
             pay(token1, address(this), _rolloverArgs.borrower, profit1);
         }
+        */
+
+
     }
 
 
