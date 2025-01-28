@@ -31,7 +31,7 @@ import '../../../libraries/uniswap/core/interfaces/callback/IUniswapV3FlashCallb
  
 
 
-contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
+contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
     using AddressUpgradeable for address;
     using NumbersLib for uint256;
 
@@ -134,8 +134,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
      */
     function rolloverLoanWithFlashSwap(
         address _lenderCommitmentForwarder,
-        uint256 _loanId,
-        //uint256 _flashLoanAmount,
+        uint256 _loanId, 
 
         uint256 _borrowerAmount, //an additional amount borrower may have to add
         uint256 _rewardAmount,
@@ -195,7 +194,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
 
     /*
-    
+        @dev  _verifyFlashCallback ensures that only the uniswap pool can call this method 
     */
     function uniswapV3FlashCallback(
         uint256 fee0,
