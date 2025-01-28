@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 import { Testable } from "../../../Testable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-import { FlashRolloverLoan } from "../../../../contracts/LenderCommitmentForwarder/extensions/FlashRolloverLoan.sol";
+import { FlashRolloverLoan } from "../../../../contracts/LenderCommitmentForwarder/extensions/rollover/FlashRolloverLoan.sol";
 
 import "../../../../contracts/interfaces/ILenderCommitmentForwarder.sol";
 import "../../../../contracts/interfaces/IFlashRolloverLoan_G4.sol";
