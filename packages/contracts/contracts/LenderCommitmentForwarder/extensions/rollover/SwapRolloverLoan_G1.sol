@@ -16,13 +16,7 @@ import "../../../interfaces/ISmartCommitmentForwarder.sol";
 import "../../../interfaces/ISwapRolloverLoan.sol";
 import "../../../libraries/NumbersLib.sol";
 
-//import { IPool } from "../../../interfaces/aave/IPool.sol";
-//import { IFlashLoanSimpleReceiver } from "../../../interfaces/aave/IFlashLoanSimpleReceiver.sol";
-//import { IPoolAddressesProvider } from "../../../interfaces/aave/IPoolAddressesProvider.sol";
-
-//import { IUniswapV3FlashCallback }from "../../../interfaces/uniswap/IUniswapV3FlashCallback.sol"; ;  
-//import { PeripheryPayments } from "../../../interfaces/uniswap/PeripheryPayments.sol"; ;
-
+ 
 import '../../../libraries/uniswap/periphery/base/PeripheryPayments.sol';
 import '../../../libraries/uniswap/periphery/base/PeripheryImmutableState.sol';
 import '../../../libraries/uniswap/periphery/libraries/PoolAddress.sol';
@@ -33,9 +27,8 @@ import '../../../libraries/uniswap/periphery/interfaces/ISwapRouter.sol';
 import '../../../libraries/uniswap/core/libraries/LowGasSafeMath.sol';
 
 import '../../../libraries/uniswap/core/interfaces/callback/IUniswapV3FlashCallback.sol';
-/*
-   https://docs.uniswap.org/contracts/v3/guides/flash-integrations/inheritance-constructors
-*/
+ 
+ 
 
 
 contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
@@ -46,17 +39,12 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
     using LowGasSafeMath for uint256;
     using LowGasSafeMath for int256;
 
-   // ISwapRouter public immutable swapRouter;   // address of the uniswap router 
-
-    
-
+   
 
     /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
     ITellerV2 public immutable TELLER_V2;
-    /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
-    
-
-  //  address public immutable POOL_ADDRESSES_PROVIDER;  // this way for aave 
+  
+     
 
     event RolloverLoanComplete(
         address borrower,
@@ -81,17 +69,14 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
         address token0;
         address token1;
-        uint24 fee1;
+        uint24 fee;
+ 
 
-        // uint24 fee2;
-        //uint24 fee3;
-
-        uint256 amount0;
-        uint256 amount1; 
-
+        uint256 flashAmount;
+        bool borrowToken1; // if false, borrow token 0 
+       
         address poolAddress;
-
-     //   PoolAddress.PoolKey poolKey; 
+ 
  
 
     } 
@@ -115,22 +100,17 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
      * @dev Using a custom OpenZeppelin upgrades tag. Ensure the constructor logic is safe for upgrades.
      *
      * @param _tellerV2 The address of the TellerV2 contract.
-     * @param _lenderCommitmentForwarder The address of the LenderCommitmentForwarder contract.
-     * @param _poolAddressesProvider The address of the PoolAddressesProvider.
+     * @param _factory The address of the UniswapV3 Factory contract to help with callback validation.
+     * @param _WETH9 The address of the WETH Contract as this is instrumental to core uniswap logic.
      */
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor(
-        address _tellerV2,
-     //   address _poolAddressesProvider,
-
-       //  ISwapRouter _swapRouter,
+        address _tellerV2, 
         address _factory,
         address _WETH9
     ) PeripheryImmutableState(_factory, _WETH9)  {
         TELLER_V2 = ITellerV2(_tellerV2);
-       // POOL_ADDRESSES_PROVIDER = _poolAddressesProvider;
-
-      //   swapRouter = _swapRouter;
+     
     }
  
 
@@ -167,40 +147,32 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
     ) external   {
         address borrower = TELLER_V2.getLoanBorrower(_loanId);
-        require(borrower == msg.sender, "CommitmentRolloverLoan: not borrower");
+        require(borrower == msg.sender, "Must be borrower");
 
-{
-        // Get lending token and balance before
-        address lendingToken = TELLER_V2.getLoanLendingToken(_loanId);
 
-       // require( _rewardAmount <= _flashLoanAmount/ 10, "Reward amount may only be up to 1/10 of flash loan amount" );
+        {
+            // Get lending token and balance before
+            address lendingToken = TELLER_V2.getLoanLendingToken(_loanId);
 
-        if (_borrowerAmount > 0) {
-            IERC20(lendingToken).transferFrom(
-                borrower,
-                address(this),
-                _borrowerAmount
-            );
+             require( 
+                  _rewardAmount <= _flashSwapArgs.flashAmount / 10 ,
+                   "Excessive reward amount" );
+
+            if (_borrowerAmount > 0) {
+                IERC20(lendingToken).transferFrom(
+                    borrower,
+                    address(this),
+                    _borrowerAmount
+                );
+            }
         }
-}
 
-        
-     IUniswapV3Pool pool = IUniswapV3Pool (_flashSwapArgs. poolAddress) ;
-/*
-{
-        PoolAddress.PoolKey memory poolKey =
-        PoolAddress.PoolKey({token0: _flashSwapArgs.token0, token1: _flashSwapArgs.token1, fee: _flashSwapArgs.fee1});
-        pool = IUniswapV3Pool(PoolAddress.computeAddress(factory, poolKey));
-}
-*/
 
-        pool.flash(
+        IUniswapV3Pool(_flashSwapArgs.poolAddress).flash(
             address(this),
-            _flashSwapArgs.amount0,   //can we flash just a single amount ? 
-            _flashSwapArgs.amount1,
-            abi.encode(
-                 
-
+           _flashSwapArgs.borrowToken1 ? 0 : _flashSwapArgs.flashAmount,            
+           _flashSwapArgs.borrowToken1 ?  _flashSwapArgs.flashAmount : 0, 
+            abi.encode( 
                 RolloverCallbackArgs({
                     lenderCommitmentForwarder : _lenderCommitmentForwarder,
                     loanId: _loanId,
@@ -218,68 +190,16 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
         );
 
 
-        //how we did it w aave 
-
-        // Call 'Flash' on the vault to borrow funds and call tellerV2FlashCallback
-        // This ultimately calls executeOperation
-      /*  IPool(POOL()).flashLoanSimple(
-            address(this),
-            lendingToken,
-            _flashLoanAmount,
-            abi.encode(
-                RolloverCallbackArgs({
-                    lenderCommitmentForwarder :_lenderCommitmentForwarder,
-                    loanId: _loanId,
-                    borrower: borrower,
-                    borrowerAmount: _borrowerAmount,
-                    rewardRecipient: _rewardRecipient,
-                    rewardAmount: _rewardAmount,
-                    acceptCommitmentArgs: abi.encode(_acceptCommitmentArgs)
-                })
-            ),
-            0 //referral code
-        );*/
+        
     }
 
 
-
-
-
-  //fee1 is the fee of the pool from the initial borrow
-    //fee2 is the fee of the first pool to arb from
-    //fee3 is the fee of the second pool to arb from
-/*    struct FlashParams {
-        address token0;
-        address token1;
-        uint24 fee1;
-        uint256 amount0;
-        uint256 amount1;
-        uint24 fee2;
-        uint24 fee3;
-    }
-
-    // fee2 and fee3 are the two other fees associated with the two other pools of token0 and token1
-    struct FlashCallbackData {
-        uint256 amount0;
-        uint256 amount1;
-        address payer;
-        PoolAddress.PoolKey poolKey;
-        uint24 poolFee2;
-        uint24 poolFee3;
-    } 
-*/
+ 
 
 
 
     /*
-     At the end of this fn, the pools balances must be GEQ than their balances at the start.
     
-
-    we should be flash borrowing these amounts which we can use during execution ! 
-
-        _flashSwapArgs.amount0,    
-        _flashSwapArgs.amount1,
-
     */
     function uniswapV3FlashCallback(
         uint256 fee0,
@@ -303,178 +223,50 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
         );
 
+    
+        PoolAddress.PoolKey memory poolKey =
+            PoolAddress.PoolKey({token0: flashSwapArgs.token0, token1: flashSwapArgs.token1, fee: flashSwapArgs.fee}); 
 
-
-        {
-            PoolAddress.PoolKey memory poolKey =
-            PoolAddress.PoolKey({token0: flashSwapArgs.token0, token1: flashSwapArgs.token1, fee: flashSwapArgs.fee1});
-           // pool = IUniswapV3Pool(PoolAddress.computeAddress(factory, poolKey));
+        _verifyFlashCallback( factory , poolKey  );
        
-            CallbackValidation.verifyCallback(factory,  poolKey); //verifies that only uniswap contract can call this fn 
-        }
+         
 
-        address token0 = flashSwapArgs.token0;
-        address token1 = flashSwapArgs.token1;
-
-
-
-
-
-
-
-
-            // ---- rollover ---- 
-
-         uint256 repaymentAmount = _repayLoanFull(
-            _rolloverArgs.loanId,
-
-            //we use token 0 for our flash loan -- can ignore token 1 
-            flashSwapArgs.token0,
-            flashSwapArgs.amount0
+        uint256 repaymentAmount = _repayLoanFull(
+            _rolloverArgs.loanId, 
+            flashSwapArgs.borrowToken1 ?  flashSwapArgs.token1 : flashSwapArgs.token0,
+            flashSwapArgs.flashAmount
         );
 
     
 
-        // Accept commitment and receive funds to this contract
-
+        // Accept commitment and receive funds to this contract 
         (uint256 newLoanId, uint256 acceptCommitmentAmount) = _acceptCommitment(
             _rolloverArgs.lenderCommitmentForwarder,
             _rolloverArgs.borrower,
-            flashSwapArgs.token0,
+         //   flashSwapArgs.token0,
+            flashSwapArgs.borrowToken1 ?  flashSwapArgs.token1 : flashSwapArgs.token0,
             acceptCommitmentArgs
         );
 
+        address flashToken = flashSwapArgs.borrowToken1 ? flashSwapArgs.token1: flashSwapArgs.token0  ; 
+        uint256 flashFee =  flashSwapArgs.borrowToken1 ? fee1: fee0 ;
+        uint256 amountOwedToPool = LowGasSafeMath.add(flashSwapArgs.flashAmount, flashFee) ; 
+ 
 
-
-        //approve the repayment for the flash loan
-        uint256 amount0Owed = LowGasSafeMath.add(flashSwapArgs.amount0, fee0);
-        uint256 amount1Owed = LowGasSafeMath.add(flashSwapArgs.amount1, fee1);
-
-        TransferHelper.safeApprove(token0, address(this), amount0Owed);
-        TransferHelper.safeApprove(token1, address(this), amount1Owed);
-
-        //pay back uniswap pool so we dont revert ! 
-        if (amount0Owed > 0) pay(token0, address(this), msg.sender, amount0Owed);
-        if (amount1Owed > 0) pay(token1, address(this), msg.sender, amount1Owed);
-
-
-
-        // send any dust to the borrower. ..
-
-        uint256 fundsRemaining = acceptCommitmentAmount +
+        TransferHelper.safeApprove(flashToken, address(this), amountOwedToPool);
+      
+       
+        if (amountOwedToPool > 0) pay(flashToken, address(this), msg.sender, amountOwedToPool);
+     
+ 
+        // send any dust to the borrower
+        uint256 fundsRemaining = flashSwapArgs.flashAmount + 
+              acceptCommitmentAmount +
             _rolloverArgs.borrowerAmount -
             repaymentAmount -
-            fee0;
-
-
-        
-        // prob need to change me 
-        // if profitable pay profits to borrower
-      /*  if (amountOut0 > amount0Owed) {
-            uint256 profit0 = LowGasSafeMath.sub(amountOut0, amount0Owed);
-
-            TransferHelper.safeApprove(token0, address(this), profit0);
-            pay(token0, address(this), _rolloverArgs.borrower, profit0);
-        }
-        if (amountOut1 > amount1Owed) {
-            uint256 profit1 = LowGasSafeMath.sub(amountOut1, amount1Owed);
-            TransferHelper.safeApprove(token0, address(this), profit1);
-            pay(token1, address(this), _rolloverArgs.borrower, profit1);
-        }
-        */
-
-
-    }
-
-
-
-
-    /**
-     *
-     * @notice Callback function that is triggered by Aave during the flash loan process.
-     *         This function handles the logic to use the borrowed funds to rollover the loan,
-     *         make necessary repayments, and manage the loan commitments.
-     *
-     * @dev The function ensures the initiator is this contract, decodes the data provided by
-     *      the flash loan call, repays the original loan in full, accepts new loan commitments,
-     *      approves the repayment for the flash loan and then handles any remaining funds.
-     *      This function should only be called by the FlashLoanPool as ensured by the `onlyFlashLoanPool` modifier.
-     *
-     * @param _flashToken The token in which the flash loan is borrowed.
-     * @param _flashAmount The amount of tokens borrowed via the flash loan.
-     * @param _flashFees The fees associated with the flash loan to be repaid to Aave.
-     * @param _initiator The address initiating the flash loan (must be this contract).
-     * @param _data Encoded data containing necessary information for loan rollover.
-     *
-     * @return Returns true if the operation was successful.
-     */
-  /*  function executeOperation(
-        address _flashToken,
-        uint256 _flashAmount,
-        uint256 _flashFees,
-        address _initiator,
-        bytes calldata _data
-    ) external virtual onlyFlashLoanPool returns (bool) {
-        require(
-            _initiator == address(this),
-            "This contract must be the initiator"
-        );
-
-        RolloverCallbackArgs memory _rolloverArgs = abi.decode(
-            _data,
-            (RolloverCallbackArgs)
-        );
-
-        uint256 repaymentAmount = _repayLoanFull(
-            _rolloverArgs.loanId,
-            _flashToken,
-            _flashAmount
-        );
-
-        AcceptCommitmentArgs memory acceptCommitmentArgs = abi.decode(
-            _rolloverArgs.acceptCommitmentArgs,
-            (AcceptCommitmentArgs)
-        );
-
-        // Accept commitment and receive funds to this contract
-
-        (uint256 newLoanId, uint256 acceptCommitmentAmount) = _acceptCommitment(
-            _rolloverArgs.lenderCommitmentForwarder,
-            _rolloverArgs.borrower,
-            _flashToken,
-            acceptCommitmentArgs
-        );
-
-        //approve the repayment for the flash loan
-        IERC20Upgradeable(_flashToken).approve(
-            address(POOL()),
-            _flashAmount + _flashFees
-        );
-
-        uint256 fundsRemaining = acceptCommitmentAmount +
-            _rolloverArgs.borrowerAmount -
-            repaymentAmount -
-            _flashFees;
-
-        if (fundsRemaining > 0) {
-
-            if (_rolloverArgs.rewardAmount > 0){
-
-                //make sure reward amount isnt TOO much here ? 
-
-                fundsRemaining -= _rolloverArgs.rewardAmount;
-                IERC20Upgradeable(_flashToken).transfer(
-                    _rolloverArgs.rewardRecipient,
-                    _rolloverArgs.rewardAmount
-                );
-
-            }
-
-            IERC20Upgradeable(_flashToken).transfer(
-                _rolloverArgs.borrower,
-                fundsRemaining
-            );
-        }
+            amountOwedToPool;
+ 
+   
 
         emit RolloverLoanComplete(
             _rolloverArgs.borrower,
@@ -483,13 +275,21 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
             fundsRemaining
         );
 
-        return true;
+    
+
+
     }
 
 
-*/
+    
+    function _verifyFlashCallback( 
+        address _factory,
+        PoolAddress.PoolKey memory _poolKey 
+     ) internal virtual {
 
+        CallbackValidation.verifyCallback(_factory,  _poolKey); //verifies that only uniswap contract can call this fn 
 
+    }
 
     /**
      *
@@ -640,13 +440,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
             fundsBeforeAcceptCommitment;
     }
 
-  /*  function ADDRESSES_PROVIDER() public view returns (IPoolAddressesProvider) {
-        return IPoolAddressesProvider(POOL_ADDRESSES_PROVIDER);
-    }
-
-    function POOL() public view returns (IPool) {
-        return IPool(ADDRESSES_PROVIDER().getPool());
-    }*/
+   
 
     /**
      * @notice Calculates the amount for loan rollover, determining if the borrower owes or receives funds.
@@ -658,10 +452,10 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
         uint256 _loanId,      
         uint256 principalAmount,
         uint256 _rewardAmount, 
-        uint16 _flashloanPremiumPct,
+        uint16 _flashloanFeePct,
         uint256 _timestamp
     ) external view returns (uint256 _flashAmount, int256 _borrowerAmount) {
-        /*
+        
 
         Payment memory repayAmountOwed = TELLER_V2.calculateAmountOwed(
             _loanId,
@@ -685,7 +479,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
             repayAmountOwed.interest;
 
         _flashAmount = repayFullAmount;
-        uint256 _flashLoanFee = _flashAmount.percent(_flashloanPremiumPct);
+        uint256 _flashLoanFee = _flashAmount.percent(_flashloanFeePct);
 
         _borrowerAmount =
             int256(commitmentPrincipalReceived) -
@@ -693,7 +487,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
             int256(_flashLoanFee) -
             int256(_rewardAmount);
 
-            */
+            
     }
 
 
@@ -743,11 +537,5 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
             );
     }
 
-    /**
-     * @notice Fetches the protocol fee percentage from the Teller V2 protocol.
-     * @return The protocol fee percentage as defined in the Teller V2 protocol.
-     */
-   /* function _getProtocolFeePct() internal view returns (uint16) {
-        return IProtocolFee(address(TELLER_V2)).protocolFee();
-    }*/
+  
 }

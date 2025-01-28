@@ -1,5 +1,7 @@
 
 
+import "forge-std/console.sol";
+
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "../../libraries/uniswap/core/interfaces/callback/IUniswapV3FlashCallback.sol";
 
@@ -115,6 +117,11 @@ contract UniswapV3PoolMock {
         uint256 balance0Before = IERC20(mockToken0).balanceOf(address(this));
         uint256 balance1Before = IERC20(mockToken1).balanceOf(address(this));
 
+          console.log("balance before");
+
+        console.logUint( balance0Before  );
+        console.logUint( balance1Before  );
+
         if (amount0 > 0) {
             IERC20(mockToken0).transfer(recipient, amount0);
         }
@@ -131,6 +138,10 @@ contract UniswapV3PoolMock {
 
         uint256 balance0After = IERC20(mockToken0).balanceOf(address(this));
         uint256 balance1After = IERC20(mockToken1).balanceOf(address(this));
+
+        console.log("balance after");
+        console.logUint( balance0After  );
+         console.logUint( balance1After  );
 
         require(balance0After >= balance0Before + (amount0 / 100), "Insufficient repayment for token0");
         require(balance1After >= balance1Before + (amount1 / 100), "Insufficient repayment for token1");
