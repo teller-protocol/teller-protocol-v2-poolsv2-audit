@@ -178,10 +178,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
                 _borrowerAmount
             );
         }
-
-
-
-
+  
 
 
         PoolAddress.PoolKey memory poolKey =
@@ -192,18 +189,10 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
             _flashSwapArgs.amount0,   //can we flash just a single amount ? 
             _flashSwapArgs.amount1,
             abi.encode(
-                //this can be custom ?? 
-               /* FlashCallbackData({
-                    amount0: params.amount0,
-                    amount1: params.amount1,
-                    payer: msg.sender,
-                    poolKey: poolKey,
-                    poolFee2: params.fee2,
-                    poolFee3: params.fee3
-                })*/
+                 
 
                 RolloverCallbackArgs({
-                    lenderCommitmentForwarder :_lenderCommitmentForwarder,
+                    lenderCommitmentForwarder : _lenderCommitmentForwarder,
                     loanId: _loanId,
                     borrower: borrower,
                     borrowerAmount: _borrowerAmount, // need this ? 
