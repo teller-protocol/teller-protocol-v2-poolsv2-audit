@@ -46,7 +46,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
     using LowGasSafeMath for uint256;
     using LowGasSafeMath for int256;
 
-    ISwapRouter public immutable swapRouter;
+   // ISwapRouter public immutable swapRouter;   // address of the uniswap router 
 
     
 
@@ -88,7 +88,10 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
         uint256 amount0;
         uint256 amount1; 
-        PoolAddress.PoolKey poolKey; 
+
+        address poolAddress;
+
+     //   PoolAddress.PoolKey poolKey; 
  
 
     } 
@@ -120,14 +123,14 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
         address _tellerV2,
      //   address _poolAddressesProvider,
 
-         ISwapRouter _swapRouter,
+       //  ISwapRouter _swapRouter,
         address _factory,
         address _WETH9
     ) PeripheryImmutableState(_factory, _WETH9)  {
         TELLER_V2 = ITellerV2(_tellerV2);
        // POOL_ADDRESSES_PROVIDER = _poolAddressesProvider;
 
-         swapRouter = _swapRouter;
+      //   swapRouter = _swapRouter;
     }
  
 
@@ -149,7 +152,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
      * @param _acceptCommitmentArgs Commitment arguments that might be necessary for internal operations.
      * 
      */
-    function rolloverLoanWithFlash(
+    function rolloverLoanWithFlashSwap(
         address _lenderCommitmentForwarder,
         uint256 _loanId,
         //uint256 _flashLoanAmount,
@@ -181,14 +184,15 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
         }
 }
 
-
- IUniswapV3Pool pool;
-
+        
+     IUniswapV3Pool pool = IUniswapV3Pool (_flashSwapArgs. poolAddress) ;
+/*
 {
         PoolAddress.PoolKey memory poolKey =
         PoolAddress.PoolKey({token0: _flashSwapArgs.token0, token1: _flashSwapArgs.token1, fee: _flashSwapArgs.fee1});
         pool = IUniswapV3Pool(PoolAddress.computeAddress(factory, poolKey));
 }
+*/
 
         pool.flash(
             address(this),
@@ -301,11 +305,16 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
 
 
-        CallbackValidation.verifyCallback(factory, flashSwapArgs.poolKey); //verifies that only uniswap contract can call this fn 
+        {
+            PoolAddress.PoolKey memory poolKey =
+            PoolAddress.PoolKey({token0: flashSwapArgs.token0, token1: flashSwapArgs.token1, fee: flashSwapArgs.fee1});
+           // pool = IUniswapV3Pool(PoolAddress.computeAddress(factory, poolKey));
+       
+            CallbackValidation.verifyCallback(factory,  poolKey); //verifies that only uniswap contract can call this fn 
+        }
 
-
-        address token0 = flashSwapArgs.poolKey.token0;
-        address token1 = flashSwapArgs.poolKey.token1;
+        address token0 = flashSwapArgs.token0;
+        address token1 = flashSwapArgs.token1;
 
 
 

@@ -1,11 +1,15 @@
 
+
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "../../libraries/uniswap/core/interfaces/callback/IUniswapV3FlashCallback.sol";
+
 contract UniswapV3PoolMock {
     //this represents an equal price ratio
     uint160 mockSqrtPriceX96 = 2 ** 96;
 
     address mockToken0;
     address mockToken1;
-
+    uint24 fee;
 
     
 
@@ -38,6 +42,10 @@ contract UniswapV3PoolMock {
 
     function set_mockToken1(address t1) public {
         mockToken1 = t1;
+    }
+
+    function set_mockFee(uint24 f0) public {
+        fee = f0;
     }
 
     function token0() public returns (address) {
@@ -82,7 +90,63 @@ contract UniswapV3PoolMock {
 
         return (tickCumulatives, secondsPerLiquidityCumulativeX128s);
     }
+
+
+
+
+    /* 
+
+            interface IUniswapV3FlashCallback {
+                function uniswapV3FlashCallback(
+                    uint256 fee0,
+                    uint256 fee1,
+                    bytes calldata data
+                ) external;
+            }
+    */
+     event Flash(address indexed recipient, uint256 amount0, uint256 amount1, uint256 paid0, uint256 paid1);
+
+    function flash(
+        address recipient,
+        uint256 amount0,
+        uint256 amount1,
+        bytes calldata data
+    ) external {
+        uint256 balance0Before = IERC20(mockToken0).balanceOf(address(this));
+        uint256 balance1Before = IERC20(mockToken1).balanceOf(address(this));
+
+        if (amount0 > 0) {
+            IERC20(mockToken0).transfer(recipient, amount0);
+        }
+        if (amount1 > 0) {
+            IERC20(mockToken1).transfer(recipient, amount1);
+        }
+
+        // Execute the callback
+        IUniswapV3FlashCallback(recipient).uniswapV3FlashCallback(   // what will the fee actually be irl ? 
+            amount0 / 100, // Simulated fee for token0 (1%)
+            amount1 / 100, // Simulated fee for token1 (1%)
+            data
+        );
+
+        uint256 balance0After = IERC20(mockToken0).balanceOf(address(this));
+        uint256 balance1After = IERC20(mockToken1).balanceOf(address(this));
+
+        require(balance0After >= balance0Before + (amount0 / 100), "Insufficient repayment for token0");
+        require(balance1After >= balance1Before + (amount1 / 100), "Insufficient repayment for token1");
+
+        emit Flash(recipient, amount0, amount1, balance0After - balance0Before, balance1After - balance1Before);
+    }
  
       
 
 }
+
+
+
+
+
+
+
+
+ 
