@@ -159,11 +159,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
                    "Excessive reward amount" );
 
             if (_borrowerAmount > 0) {
-                IERC20(lendingToken).transferFrom(
-                    borrower,
-                    address(this),
-                    _borrowerAmount
-                );
+                TransferHelper.safeTransferFrom(lendingToken, borrower, address(this), _borrowerAmount);              
             }
         }
 
@@ -255,18 +251,34 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments {
 
         TransferHelper.safeApprove(flashToken, address(this), amountOwedToPool);
       
-       
+            //in this instance, msg.sender is the uniswap pool ! 
         if (amountOwedToPool > 0) pay(flashToken, address(this), msg.sender, amountOwedToPool);
      
  
         // send any dust to the borrower
-        uint256 fundsRemaining = flashSwapArgs.flashAmount + 
+         uint256 fundsRemaining = flashSwapArgs.flashAmount + 
               acceptCommitmentAmount +
             _rolloverArgs.borrowerAmount -
             repaymentAmount -
             amountOwedToPool;
  
-   
+    
+          if (fundsRemaining > 0) {
+
+            if (_rolloverArgs.rewardAmount > 0){ 
+
+                fundsRemaining -= _rolloverArgs.rewardAmount;
+
+                TransferHelper.safeTransfer(flashToken,   _rolloverArgs.rewardRecipient,   _rolloverArgs.rewardAmount) ;
+                  
+            }
+
+           TransferHelper.safeTransfer(flashToken,  _rolloverArgs.borrower,   fundsRemaining) ;
+                 
+            
+        }
+
+
 
         emit RolloverLoanComplete(
             _rolloverArgs.borrower,
