@@ -86,6 +86,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         uint256 loanId;
         address borrower;
         uint256 borrowerAmount;
+        uint256 atmId; 
         address rewardRecipient;
         uint256 rewardAmount;
         bytes acceptCommitmentArgs;
@@ -136,9 +137,71 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         address _lenderCommitmentForwarder,
         uint256 _loanId, 
 
+        uint256 _borrowerAmount, //an additional amount borrower may have to add 
+
+        FlashSwapArgs calldata _flashSwapArgs, 
+
+        AcceptCommitmentArgs calldata _acceptCommitmentArgs
+
+    ) external   {
+        address borrower = TELLER_V2.getLoanBorrower(_loanId);
+        require(borrower == msg.sender, "Must be borrower");
+
+
+        {
+            // Get lending token and balance before
+            address lendingToken = TELLER_V2.getLoanLendingToken(_loanId);
+
+             require( 
+                  _rewardAmount <= _flashSwapArgs.flashAmount / 10 ,
+                   "Excessive reward amount" );
+
+            if (_borrowerAmount > 0) {
+                TransferHelper.safeTransferFrom(lendingToken, borrower, address(this), _borrowerAmount);              
+            }
+        }
+
+        address poolAddress = getUniswapPoolAddress (
+            _flashSwapArgs.token0,
+            _flashSwapArgs.token1,
+            _flashSwapArgs.fee
+        );
+
+        IUniswapV3Pool( poolAddress ).flash(
+            address(this),
+           _flashSwapArgs.borrowToken1 ? 0 : _flashSwapArgs.flashAmount,            
+           _flashSwapArgs.borrowToken1 ?  _flashSwapArgs.flashAmount : 0, 
+            abi.encode( 
+                RolloverCallbackArgs({
+                    lenderCommitmentForwarder : _lenderCommitmentForwarder,
+                    loanId: _loanId,
+                    borrower: borrower,
+                    borrowerAmount: _borrowerAmount, 
+                    rewardRecipient: address(0),
+                    rewardAmount: 0,
+                    acceptCommitmentArgs: abi.encode(_acceptCommitmentArgs),
+
+                    flashSwapArgs: abi.encode( _flashSwapArgs) 
+                    
+                })
+
+            )
+        );
+
+
+        
+    }
+
+
+
+    function rolloverLoanWithFlashSwapRewards(
+        address _lenderCommitmentForwarder,
+        uint256 _loanId, 
+
         uint256 _borrowerAmount, //an additional amount borrower may have to add
         uint256 _rewardAmount,
         address _rewardRecipient,
+        uint256 _atmId, 
 
         FlashSwapArgs calldata _flashSwapArgs, 
 
@@ -180,6 +243,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
                     borrowerAmount: _borrowerAmount, // need this ? 
                     rewardRecipient: _rewardRecipient,
                     rewardAmount: _rewardAmount,
+                    atmId: _atmId, 
                     acceptCommitmentArgs: abi.encode(_acceptCommitmentArgs),
 
                     flashSwapArgs: abi.encode( _flashSwapArgs) 
@@ -193,8 +257,6 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         
     }
 
-
- 
 
 
 
@@ -275,8 +337,9 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
             if (_rolloverArgs.rewardAmount > 0){ 
 
                 fundsRemaining -= _rolloverArgs.rewardAmount;
-
                 TransferHelper.safeTransfer(flashToken,   _rolloverArgs.rewardRecipient,   _rolloverArgs.rewardAmount) ;
+
+                emit RolloverWithReferral( newLoanId, flashToken, _rolloverArgs.rewardRecipient,   _rolloverArgs.rewardAmount, atmId     ) ;  
                   
             }
 
