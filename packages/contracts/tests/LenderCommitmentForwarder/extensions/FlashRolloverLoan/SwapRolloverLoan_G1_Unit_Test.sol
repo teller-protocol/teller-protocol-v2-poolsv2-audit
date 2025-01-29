@@ -213,8 +213,8 @@ contract SwapRolloverLoan_Unit_Test is Testable {
             address(lenderCommitmentForwarder),
             loanId, 
             borrowerAmount,
-            rewardAmount,
-            rewardRecipient, 
+           // rewardAmount,
+        //    rewardRecipient, 
 
             flashSwapArgs,
             commitmentArgs
