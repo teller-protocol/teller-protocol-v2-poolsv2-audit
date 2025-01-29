@@ -24,6 +24,8 @@ import '../../../libraries/uniswap/periphery/libraries/CallbackValidation.sol';
 import '../../../libraries/uniswap/periphery/libraries/TransferHelper.sol';
 import '../../../libraries/uniswap/periphery/interfaces/ISwapRouter.sol';
 
+import '../../../libraries/uniswap/core/interfaces/IUniswapV3Factory.sol';
+
 import '../../../libraries/uniswap/core/libraries/LowGasSafeMath.sol';
 
 import '../../../libraries/uniswap/core/interfaces/callback/IUniswapV3FlashCallback.sol';
@@ -75,7 +77,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         uint256 flashAmount;
         bool borrowToken1; // if false, borrow token 0 
        
-        address poolAddress;
+        //address poolAddress;
  
  
 
@@ -162,8 +164,13 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
             }
         }
 
+        address poolAddress = getUniswapPoolAddress (
+            _flashSwapArgs.token0,
+            _flashSwapArgs.token1,
+            _flashSwapArgs.fee
+        );
 
-        IUniswapV3Pool(_flashSwapArgs.poolAddress).flash(
+        IUniswapV3Pool( poolAddress ).flash(
             address(this),
            _flashSwapArgs.borrowToken1 ? 0 : _flashSwapArgs.flashAmount,            
            _flashSwapArgs.borrowToken1 ?  _flashSwapArgs.flashAmount : 0, 
@@ -304,6 +311,18 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         CallbackValidation.verifyCallback(_factory,  _poolKey); //verifies that only uniswap contract can call this fn 
 
     }
+
+
+    function getUniswapPoolAddress(  
+        address token0,
+        address token1,
+        uint24 fee
+     ) public view virtual returns (address) {
+
+        return IUniswapV3Factory(factory).getPool(token0,token1,fee);
+
+    }
+
 
     /**
      *

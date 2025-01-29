@@ -24,6 +24,9 @@ import {PoolAddress} from '../../../../contracts/libraries/uniswap/periphery/lib
 
 
 contract SwapRolloverLoanOverride is SwapRolloverLoan_G1 {
+
+    address uniswapPoolMockAddress; 
+
     constructor(
         address _tellerV2,
         address _factory,
@@ -46,6 +49,21 @@ contract SwapRolloverLoanOverride is SwapRolloverLoan_G1 {
      ) internal  override {
         
         //  we have to stub away this check in testing 
+
+    }
+
+
+    function set_uniswapPoolMockAddress(address _pool) public {
+        uniswapPoolMockAddress = _pool; 
+    }
+   
+      function getUniswapPoolAddress(  
+        address token0,
+        address token1,
+        uint24 fee
+     ) public view override returns (address) {
+
+        return  uniswapPoolMockAddress ;
 
     }
 
@@ -109,6 +127,8 @@ contract SwapRolloverLoan_Unit_Test is Testable {
             address(wethMock)
         );
 
+        swapRolloverLoan.set_uniswapPoolMockAddress( address(uniswapPoolMock) );
+
         IntegrationTestHelpers.deployIntegrationSuite();
     }
 
@@ -166,8 +186,8 @@ contract SwapRolloverLoan_Unit_Test is Testable {
                 token1: address(collateralToken),
                 fee: 100,
                 flashAmount: flashAmount,
-                borrowToken1: false ,
-                poolAddress: address( uniswapPoolMock )
+                borrowToken1: false 
+             //   poolAddress: address( uniswapPoolMock )
             });
 
         vm.prank(address(borrower));
