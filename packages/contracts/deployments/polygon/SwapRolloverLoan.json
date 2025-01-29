@@ -1,5 +1,5 @@
 {
-  "address": "0xA6406fcbCCe89B899344d3E0D004DfeAa225a259",
+  "address": "0x61F3673CAD0B99Ec18E6Dc242eE67f0ea48CD227",
   "abi": [
     {
       "type": "constructor",
@@ -180,6 +180,33 @@
     },
     {
       "type": "function",
+      "name": "getUniswapPoolAddress",
+      "constant": true,
+      "stateMutability": "view",
+      "payable": false,
+      "inputs": [
+        {
+          "type": "address",
+          "name": "token0"
+        },
+        {
+          "type": "address",
+          "name": "token1"
+        },
+        {
+          "type": "uint24",
+          "name": "fee"
+        }
+      ],
+      "outputs": [
+        {
+          "type": "address",
+          "name": ""
+        }
+      ]
+    },
+    {
+      "type": "function",
       "name": "refundETH",
       "constant": false,
       "stateMutability": "payable",
@@ -236,10 +263,6 @@
             {
               "type": "bool",
               "name": "borrowToken1"
-            },
-            {
-              "type": "address",
-              "name": "poolAddress"
             }
           ]
         },
@@ -354,7 +377,7 @@
       "stateMutability": "payable"
     }
   ],
-  "transactionHash": "0x0487a9a056085572743315eda8f7521366af80910d7741709934c2088b48c0ec",
+  "transactionHash": "0xeed24b08837f0526be09f3afe11e0ba98a5db955e7ef6415076653d3e7c4757a",
   "receipt": {
     "to": null,
     "from": "0xD9B023522CeCe02251d877bb0EB4f06fDe6F98E6",
@@ -362,5 +385,5 @@
     "blockNumber": null
   },
   "numDeployments": 1,
-  "implementation": "0xB2A57902bd1E1A0a6Cf673a6B653C303E9713411"
+  "implementation": "0x22CA04516a4399C19f1296E0CE9691E87107cF57"
 }
