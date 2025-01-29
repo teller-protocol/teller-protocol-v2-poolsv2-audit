@@ -238,7 +238,6 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         (uint256 newLoanId, uint256 acceptCommitmentAmount) = _acceptCommitment(
             _rolloverArgs.lenderCommitmentForwarder,
             _rolloverArgs.borrower,
-         //   flashSwapArgs.token0,
             flashSwapArgs.borrowToken1 ?  flashSwapArgs.token1 : flashSwapArgs.token0,
             acceptCommitmentArgs
         );
@@ -250,7 +249,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
 
         TransferHelper.safeApprove(flashToken, address(this), amountOwedToPool);
       
-            //in this instance, msg.sender is the uniswap pool ! 
+        //  msg.sender is the uniswap pool  
         if (amountOwedToPool > 0) pay(flashToken, address(this), msg.sender, amountOwedToPool);
      
  
