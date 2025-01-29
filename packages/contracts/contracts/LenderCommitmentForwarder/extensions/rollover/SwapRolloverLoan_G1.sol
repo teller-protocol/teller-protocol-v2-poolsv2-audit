@@ -77,9 +77,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         uint256 flashAmount;
         bool borrowToken1; // if false, borrow token 0 
        
-        //address poolAddress;
- 
- 
+        
 
     } 
 
