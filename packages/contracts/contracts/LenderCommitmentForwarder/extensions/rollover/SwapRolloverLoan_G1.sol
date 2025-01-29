@@ -226,9 +226,14 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
        
          
 
+        address flashToken = flashSwapArgs.borrowToken1 ? flashSwapArgs.token1: flashSwapArgs.token0  ; 
+        uint256 flashFee =  flashSwapArgs.borrowToken1 ? fee1: fee0 ;
+
+
+
         uint256 repaymentAmount = _repayLoanFull(
             _rolloverArgs.loanId, 
-            flashSwapArgs.borrowToken1 ?  flashSwapArgs.token1 : flashSwapArgs.token0,
+            flashToken,
             flashSwapArgs.flashAmount
         );
 
@@ -238,12 +243,11 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         (uint256 newLoanId, uint256 acceptCommitmentAmount) = _acceptCommitment(
             _rolloverArgs.lenderCommitmentForwarder,
             _rolloverArgs.borrower,
-            flashSwapArgs.borrowToken1 ?  flashSwapArgs.token1 : flashSwapArgs.token0,
+            flashToken,
             acceptCommitmentArgs
         );
 
-        address flashToken = flashSwapArgs.borrowToken1 ? flashSwapArgs.token1: flashSwapArgs.token0  ; 
-        uint256 flashFee =  flashSwapArgs.borrowToken1 ? fee1: fee0 ;
+       
         uint256 amountOwedToPool = LowGasSafeMath.add(flashSwapArgs.flashAmount, flashFee) ; 
  
 
