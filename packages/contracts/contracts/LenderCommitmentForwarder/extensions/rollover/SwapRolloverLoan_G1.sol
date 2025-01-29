@@ -462,7 +462,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
         uint256 _loanId,      
         uint256 principalAmount,
         uint256 _rewardAmount, 
-        uint16 _flashloanFeePct,
+        uint16 _flashloanFeePct,  // 3000 means 0.3%  in uniswap terms
         uint256 _timestamp
     ) external view returns (uint256 _flashAmount, int256 _borrowerAmount) {
         
@@ -489,7 +489,7 @@ contract SwapRolloverLoan_G1 is IUniswapV3FlashCallback, PeripheryPayments  {
             repayAmountOwed.interest;
 
         _flashAmount = repayFullAmount;
-        uint256 _flashLoanFee = _flashAmount.percent(_flashloanFeePct);
+        uint256 _flashLoanFee = _flashAmount.percent(_flashloanFeePct, 4 );
 
         _borrowerAmount =
             int256(commitmentPrincipalReceived) -

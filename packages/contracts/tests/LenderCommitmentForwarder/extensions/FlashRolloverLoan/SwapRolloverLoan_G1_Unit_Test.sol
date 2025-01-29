@@ -250,7 +250,7 @@ contract SwapRolloverLoan_Unit_Test is Testable {
 
         uint16 protocolFeePct = 0;
 
-        uint16 flashLoanFeePct = 100;  // uniswap fee .. ? 
+        uint16 flashLoanFeePct = 3000;  // standard uniswap fee  
 
 
         uint256 timestamp = block.timestamp ; 
@@ -270,7 +270,7 @@ contract SwapRolloverLoan_Unit_Test is Testable {
 
         assertEq( _flashAmount , 5000 );
 
-        assertEq( _borrowerAmount , -50 );  //borrower needs to provide 50 
+        assertEq( _borrowerAmount , -15 );  //borrower needs to provide 50 
 
 
       
