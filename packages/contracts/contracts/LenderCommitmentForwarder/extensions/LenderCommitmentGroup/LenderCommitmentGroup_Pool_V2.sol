@@ -1379,6 +1379,12 @@ contract LenderCommitmentGroup_Pool_V2 is
         if (paused) {
             return 0;
         }
+
+        if(!firstDepositMade && msg.sender != owner()){
+           return 0;
+        }
+
+
         return type(uint256).max;
     }
 
@@ -1386,6 +1392,11 @@ contract LenderCommitmentGroup_Pool_V2 is
         if (paused) {
             return 0;
         }
+
+        if(!firstDepositMade && msg.sender != owner()){
+           return 0;
+        }
+        
         return type(uint256).max;
     }
 
