@@ -1012,7 +1012,7 @@ contract LenderCommitmentGroup_Pool_V2 is
     function setWithdrawDelayTime(uint256 _seconds) 
     external 
     onlyProtocolOwner {
-        require( _seconds < MAX_WITHDRAW_DELAY_TIME );
+        require( _seconds < MAX_WITHDRAW_DELAY_TIME , "min withdraw delay");
 
         withdrawDelayTimeSeconds = _seconds;
     }
@@ -1167,7 +1167,7 @@ contract LenderCommitmentGroup_Pool_V2 is
     returns (uint256 shares) {
 
         // Similar to addPrincipalToCommitmentGroup but following ERC4626 standard
-        require(assets > 0 );
+        require(assets > 0, "no assets" );
         
        
         
@@ -1210,7 +1210,7 @@ contract LenderCommitmentGroup_Pool_V2 is
 
         // Calculate assets needed for desired shares
         assets = previewMint(shares);
-        require(assets > 0 );
+        require(assets > 0 , "no assets");
 
 
         
