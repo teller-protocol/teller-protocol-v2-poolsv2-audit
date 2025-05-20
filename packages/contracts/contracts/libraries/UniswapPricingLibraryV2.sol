@@ -5,15 +5,10 @@ pragma solidity >=0.8.0 <0.9.0;
 
 import {IUniswapPricingLibrary} from "../interfaces/IUniswapPricingLibrary.sol";
 
-import "@openzeppelin/contracts/utils/math/Math.sol";
-
  
-import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeable.sol";
-
-// Libraries
-import { MathUpgradeable } from "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/token/ERC20/extensions/IERC20MetadataUpgradeable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/cryptography/MerkleProofUpgradeable.sol";
+  
+// Libraries  
+ 
 
 import "../interfaces/uniswap/IUniswapV3Pool.sol"; 
 
@@ -22,7 +17,7 @@ import "../libraries/uniswap/FixedPoint96.sol";
 import "../libraries/uniswap/FullMath.sol";
  
  
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+ 
 
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 
