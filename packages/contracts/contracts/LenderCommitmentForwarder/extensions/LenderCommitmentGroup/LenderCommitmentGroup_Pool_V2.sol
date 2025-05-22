@@ -920,7 +920,14 @@ contract LenderCommitmentGroup_Pool_V2 is
             : 0;
     }
 
-   
+    /**
+     * @notice Converts an amount to its underlying value using a given exchange rate with rounding down
+     * @dev Uses MathUpgradeable.mulDiv with explicit rounding down to prevent favorable rounding for users
+     * @dev This function is used for conversions where rounding down protects the protocol (e.g., calculating shares to mint)
+     * @param amount The amount to convert (in the source unit)
+     * @param rate The exchange rate to apply, expanded by EXCHANGE_RATE_EXPANSION_FACTOR
+     * @return value_ The converted value in the target unit, rounded down
+     */
     function _valueOfUnderlying(uint256 amount, uint256 rate)
         internal
         pure
@@ -943,6 +950,14 @@ contract LenderCommitmentGroup_Pool_V2 is
     }
 
 
+    /**
+     * @notice Converts an amount to its underlying value using a given exchange rate with rounding up
+     * @dev Uses MathUpgradeable.mulDiv with explicit rounding up to ensure protocol safety
+     * @dev This function is used for conversions where rounding up protects the protocol (e.g., calculating assets needed for shares)
+     * @param amount The amount to convert (in the source unit)
+     * @param rate The exchange rate to apply, expanded by EXCHANGE_RATE_EXPANSION_FACTOR
+     * @return value_ The converted value in the target unit, rounded up
+     */
     function _valueOfUnderlyingRoundUpwards(uint256 amount, uint256 rate)
         internal
         pure
