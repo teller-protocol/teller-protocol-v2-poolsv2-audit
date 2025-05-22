@@ -834,12 +834,14 @@ contract LenderCommitmentGroup_Pool_V2 is
     }
 
 
-    /*
-        If principal get stuck in the escrow vault for any reason, anyone may
-        call this function to move them from that vault in to this contract 
+ 
 
-        @dev there is no need to increment totalPrincipalTokensRepaid here as that is accomplished by the repayLoanCallback
-    */
+
+    /**
+     * @notice If principal get stuck in the escrow vault for any reason, anyone may
+     *   call this function to move them from that vault in to this contract 
+     * @param _amount  Amount of tokens to withdraw
+     */
     function withdrawFromEscrowVault ( uint256 _amount ) external whenForwarderNotPaused whenNotPaused {
 
         address _escrowVault = ITellerV2(TELLER_V2).getEscrowVault();
