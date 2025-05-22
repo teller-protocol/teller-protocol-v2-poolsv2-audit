@@ -33,7 +33,7 @@ abstract contract LenderCommitmentGroupSharesIntegrated is
     );
 
  
-    constructor()   {}
+   
 
     /*
         The two tokens MUST implement IERC20Metadata or else this will fail.
